@@ -49,6 +49,13 @@ post your issues here as follows:
 					shwBoard(slots)
 
 			doing this will print false all the time, which means there's a problem with the emptyspace function (probably)
+
+
+		update #02 [final]:
+
+			issue resolved. emptyspace compares its argument with '', not ' '.
+			and now that I changed the slots from '' to ' ' for the output to avoid grid shifting, it screwed up the code.
+			This one's on me.
 ]
 
 

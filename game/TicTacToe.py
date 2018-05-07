@@ -83,7 +83,7 @@ def emptyspace(plyr_mve):
     '''function that identifies blank spaces in the global list (slot)'''
 
 
-    if slots[plyr_mve] == '':
+    if slots[plyr_mve] == ' ':
         return True
     else:
         return False
@@ -99,7 +99,7 @@ def compmove():
     while state != True:    
         x =choice(list(range(8)))
         y=emptyspace(x)
-        state=y     
+        state=y 
     if state == True:
         slots[x]='Z'
         shwBoard(slots)
@@ -156,7 +156,7 @@ def checkwin(symb):
         emp_lst=[]
         for i in item:
             emp_lst.append(slots[i])
-        if emp_lst[0]!='' and emp_lst[0] == emp_lst[1] and emp_lst[1] == emp_lst[2]:
+        if emp_lst[0]!=' ' and emp_lst[0] == emp_lst[1] and emp_lst[1] == emp_lst[2]:
             status=True
             return status
     else:
