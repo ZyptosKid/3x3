@@ -2,6 +2,31 @@ post your issues here as follows:
 [folder->file][line][problem][additional info.]
 
 
+[TicTacToe][either the runGame func/ or the compmove func][COLD BE infinite loop bug][
+
+	reproduction:
+
+		terminal:
+		///ran Tictactoe///
+		
+		are you alone? y for yes and n for no please.y
+		alright! you'll play with Ultron :)
+		Player 1, do you wanna go first? y for yes and n for no please.n
+		Ultron will go first. be careful from his moves.
+
+		^C
+
+		Traceback (most recent call last):
+			File "MainFrame.py", line 51, in <module>
+				Tic.runGame()
+			File "TicTacToe.py", line 223, in runGame
+				compmove()
+			File "TicTacToe.py", line 100, in compmove
+				x =choice(list(range(8)))
+
+		KeyboardInterrupt
+]
+
 
 
 /// all the bugs indented in this are patched and resolved.
