@@ -8,7 +8,7 @@ post your issues here as follows:
 
 		terminal:
 		///ran Tictactoe///
-		
+
 		are you alone? y for yes and n for no please.y
 		alright! you'll play with Ultron :)
 		Player 1, do you wanna go first? y for yes and n for no please.n
@@ -25,6 +25,30 @@ post your issues here as follows:
 				x =choice(list(range(8)))
 
 		KeyboardInterrupt
+
+
+		update #01:
+
+			///from test.py:///
+
+			def compmove(): 
+				'''Function that chooses the comp move based on random choice built in function and stores it in (slots) list'''
+
+
+				state=bool
+				while state != True:    
+					# x =choice(list(range(8))) causes some error.. I don't know
+					x = choice([0,1,2,3,4,5,6,7,8])
+					print(x)
+					y=emptyspace(x)
+					print(y)
+					state=y 
+					print(state)    
+				if state == True:
+					slots[x]='Z'
+					shwBoard(slots)
+
+			doing this will print false all the time, which means there's a problem with the emptyspace function (probably)
 ]
 
 
