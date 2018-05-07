@@ -81,15 +81,41 @@ def initialize():
 
 def showBoard(Board):
 
+	if type(Board) == dict:
+		PBoard = Board.values()
+
 	print(
-		'\n [1] | [2] | [3]\n  {}  |  {}  |  {} \n-----------------\n [4] | [5] | [6]\n  {}  |  {}  |  {} \n-----------------\n [7] | [8] | [9]\n  {}  |  {}  |  {} \n'.format(*Board.values())
+		'\n [1] | [2] | [3]\n  {}  |  {}  |  {} \n-----------------\n [4] | [5] | [6]\n  {}  |  {}  |  {} \n-----------------\n [7] | [8] | [9]\n  {}  |  {}  |  {} \n'.format(*PBoard)
 		)
 
 
 def playermoved(Board,currentPMark,otherPMark):
 
-	corners1 = {1,9}
-	corners2 = {3,7}
+	corners = [
+		{1,9},
+		{3,7}
+	]
+
+	jumps = [
+		{1,3},
+		{1,7},
+		{1,9},
+		{2,8},
+		{3,7},
+		{3,9},
+		{4,6}
+	]
+
+	ambition = [
+		{1,8},
+		{1,6},
+		{2,9},
+		{2,7},
+		{3,8},
+		{3,9},
+		{4,9},
+		{6,7},
+	]
 
 	# error dict
 	# error action dict
@@ -99,28 +125,36 @@ def playermoved(Board,currentPMark,otherPMark):
 
 	while True:
 
-		moveOrigin = int(input('Choose a square where you have one of your pieces:  '))
-		moveDest = int(input('Choose a square where you want it to go:  '))
-		moveSpace = moveDest - moveOrigin
 
-		cornerJumps = {moveOrigin,moveDest} == corners1 or {moveOrigin,moveDest} == corners2
-		normalJumps = (abs(moveSpace) == 6 or abs(moveSpace) == 2) and moveOrigin != 5
-		ambitious = abs(moveSpace) == 7 or abs(moveSpace) == 5
+		while True:
+
+			moveOrigin = int(input('Choose a square where you have one of your pieces:  '))
+
+			if Board[moveOrigin] != currentPMark:
+				print('please choose one of your pieces')
+				continue
+
+			break
+		
+		while True:
+
+			moveDest = int(input('Choose a square where you want it to go:  '))
+
+			if Board[moveDest] != " ":
+				print('you can\'t move there!')
+				continue
+
+			break
+
+		cornerJumps = {moveOrigin,moveDest} in corners
+		normalJumps = {moveOrigin,moveDest} in jumps
+		ambitious = {moveOrigin,moveDest} in ambition
 
 		if (moveOrigin not in Board) or (moveDest not in Board):
 
 			print('you chose something that isn\'t on the Board to begin with.')
 			continue
 
-		elif Board[moveOrigin] != currentPMark:
-
-			print('please choose one of your pieces')
-			continue
-
-		elif Board[moveDest] != " ":
-
-			print('you can\'t move there!')
-			continue
 
 		elif ambitious:
 
@@ -137,7 +171,7 @@ def playermoved(Board,currentPMark,otherPMark):
 			Board[moveOrigin] = " "
 			break
 
-	del(corners1,corners2)
+	del(corners,jumps,ambition)
 	return moveOrigin
 
 
@@ -154,18 +188,40 @@ def compumoved(Board,currentPMark,otherPMark):
 		else:
 			pass
 
-	corners1 = {1,9}
-	corners2 = {3,7}
+	corners = [
+		{1,9},
+		{3,7}
+	]
+
+	jumps = [
+		{1,3},
+		{1,7},
+		{1,9},
+		{2,8},
+		{3,7},
+		{3,9},
+		{4,6}
+	]
+
+	ambition = [
+		{1,8},
+		{1,6},
+		{2,9},
+		{2,7},
+		{3,8},
+		{3,9},
+		{4,9},
+		{6,7},
+	]
 
 	while True:
 	
 		moveOrigin = randomChoice(moveOrigins)
 		moveDest = randomChoice(moveDests)
-		moveSpace = moveDest - moveOrigin
 
-		cornerJumps = {moveOrigin,moveDest} == corners1 or {moveOrigin,moveDest} == corners2
-		normalJumps = (abs(moveSpace) == 6 or abs(moveSpace) == 2) and moveOrigin != 5
-		ambitious = abs(moveSpace) == 7 or abs(moveSpace) == 5
+		cornerJumps = {moveOrigin,moveDest} in corners
+		normalJumps = {moveOrigin,moveDest} in jumps
+		ambitious = {moveOrigin,moveDest} in ambition
 
 		if ambitious:
 			continue
@@ -178,7 +234,7 @@ def compumoved(Board,currentPMark,otherPMark):
 			Board[moveOrigin] = " "
 			break
 
-	del(corners1,corners2)
+	del(corners,jumps,ambition)
 	return moveOrigin
 
 

@@ -1,11 +1,12 @@
 from random import choice
+from Siga import showBoard
 
 
-
-slots=['','','','','','','','',''] #global list used to insert (1 or more user's) or the computer's input. 
+slots=[' ',' ',' ',' ',' ',' ',' ',' ',' '] #global list used to insert (1 or more user's) or the computer's input. 
 demo=['1','2','3','4','5','6','7','8','9'] #demo list to show the user how to use the board.
 #player 1 chooses between single or multi
 def help():
+    '''prints game manual'''
     print('''hello! this is TicTacToe made by Adham and supervised by our team '3x3.'
 the concept is pretty simple, you choose whether you want to play with the computer or with your friend and based on turns
 each player will try to hit his/her letter (X or Z) horizontally, vertically, or diagonally in 3 slots.
@@ -13,6 +14,8 @@ who ever claims three consecutive of his letter, Wins the game!
 ''') 
 
 def SingleOrMulti():
+    '''multiplayer / single player checker'''
+    
     gametype=''
     while gametype=='':
         mode=input('are you alone? y for yes and n for no please.')
@@ -29,11 +32,16 @@ def SingleOrMulti():
      
 
  
-def shwBoard(board): #function that prints the board using a list.
-    print('' +board[0]+ '  | ' +board[1]+ '  | '+board[2] )
-    print('' +board[3]+ '  | ' +board[4]+ '  | '+board[5] )
-    print('' +board[6]+ '  | ' +board[7]+ '  | '+board[8] )
-    print('-------------')
+def shwBoard(board): 
+    '''function that prints the board using a list.'''
+
+
+    # print('' +board[0]+ '  | ' +board[1]+ '  | '+board[2] )
+    # print('' +board[3]+ '  | ' +board[4]+ '  | '+board[5] )
+    # print('' +board[6]+ '  | ' +board[7]+ '  | '+board[8] )
+    # print('-------------')
+
+    showBoard(board)
 
 
 
@@ -43,10 +51,12 @@ def shwBoard(board): #function that prints the board using a list.
     
 
 
-#player1 chooses who goes first, whether P1 is playing W comp or P2            
+         
 
 
 def whosfirst():
+    '''player1 chooses who goes first, whether P1 is playing W comp or P2   '''
+
     answertype=''
     while answertype=='':
         answer=input('Player 1, do you wanna go first? y for yes and n for no please.')
@@ -69,7 +79,8 @@ def whosfirst():
 
 
 
-def emptyspace(plyr_mve): #function that identifies blank spaces in the global list (slot)
+def emptyspace(plyr_mve): 
+    '''function that identifies blank spaces in the global list (slot)'''
 
 
     if slots[plyr_mve] == '':
@@ -80,7 +91,8 @@ def emptyspace(plyr_mve): #function that identifies blank spaces in the global l
 
 
 
-def compmove(): #Function that chooses the comp move based on random choice built in function and stores it in (slots) list
+def compmove(): 
+    '''Function that chooses the comp move based on random choice built in function and stores it in (slots) list'''
 
 
     state=bool
@@ -97,7 +109,8 @@ def compmove(): #Function that chooses the comp move based on random choice buil
 
 
 
-def player1move(symb): #function that lets the player choose his move and stores it into (slots) list 
+def player1move(symb): 
+    '''function that lets the player choose his move and stores it into (slots) list '''
      
     shwBoard(demo)
     while True:
@@ -118,7 +131,8 @@ def player1move(symb): #function that lets the player choose his move and stores
         
         
         
-def boardfull(): #checks if the board is full and prints that game has ended.
+def boardfull(): 
+    '''checks if the board is full and prints that game has ended.'''
 
     marker=0
     for i in slots:
@@ -131,7 +145,8 @@ def boardfull(): #checks if the board is full and prints that game has ended.
         
 
 
-def checkwin(symb):#checks if either X or Z hit one of the possible winning combinations.
+def checkwin(symb):
+    '''checks if either X or Z hit one of the possible winning combinations.'''
     status=True
 
 
@@ -160,7 +175,8 @@ def gameon():
         return status
 '''
 
-def runGame(): # the central code that runs the game
+def runGame():
+    ''' the central code that runs the game'''
     help() #introduces player to the rules and the team
     mode=SingleOrMulti() #user chooses game mode
     if mode == 'multi':

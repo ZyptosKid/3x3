@@ -19,8 +19,7 @@ Valid = True
 
 while True:
 
-	# answer = input('Do you want to play? [Y/N]:  ')
-	answer = 'Y'
+	answer = input('Do you want to play one of our three games? [Y/N]:  ')
 
 	while Valid:
 
@@ -40,8 +39,7 @@ while True:
 			print('		[2] Siga')
 			print('		[3] Rocket Collider\n\n')
 
-			# answer = input('- I want to play:  ')
-			answer = '2'
+			answer = input('- I want to play:  ')
 
 			answerOptions = {
 				1:{'tic tac toe','tictactoe','tictac toe','tic tactoe'},

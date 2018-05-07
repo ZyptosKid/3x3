@@ -1,7 +1,18 @@
 post your issues here as follows:
 [folder->file][line][problem][additional info.]
 
-[Siga][somewhere][add sleep to player turn print]
-[Siga][somewhere][
-	the play function doesn't check input validity until the player finishes inputting everything
+
+
+
+/// all the bugs indented in this are patched and resolved.
+
+	[Siga][somewhere][add sleep to player turn print]
+	[Siga][somewhere][
+		the play function doesn't check input validity until the player finishes inputting everything
+		]
+
+	[Siga][playermove & compumove][
+		moving from 4 to 2 when p2 is in 3 produces a (you can't jump) error.
+		Try:
+			instead of a mathematical approach, try a list of sets of all the possible "2 square" jumps
 	]
