@@ -31,7 +31,6 @@ P{:d} Pick an valid cell: '''.format(i)))
             if 0<Start_point and Start_point<10:
                 break
 
-        print(initialmoves)
         while Start_point in initialmoves:
             Start_point=int(input('P{:d} Pick an unoccupied cell: '.format(i)))
             print()
@@ -90,5 +89,3 @@ P{:d} Pick an valid cell: '''.format(i)))
 #         rungame()
 #     else:
 #         print('Thanks for playing our game XD')
-
-runGame()
