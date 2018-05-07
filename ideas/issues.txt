@@ -1,2 +1,7 @@
 post your issues here as follows:
 [folder->file][line][problem][additional info.]
+
+[Siga][somewhere][add sleep to player turn print]
+[Siga][somewhere][
+	the play function doesn't check input validity until the player finishes inputting everything
+	]

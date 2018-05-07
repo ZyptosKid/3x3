@@ -5,7 +5,7 @@ def shwBoard(board):
     print('' +board[7]+ '  | ' +board[8]+ '  | '+board[9] )
 #shwBoard(slots)
 
-def Start_Game():
+def runGame():
     slots=['0','1','2','3','4','5','6','7','8','9']
     Movement_Tracing=[]
     z=len(Movement_Tracing)-1
@@ -46,14 +46,4 @@ def Start_Game():
             break
         else:
             print('Draww')
-    Newgame()
-
-
-def Newgame():
-    New_game=input('Wanna play again? Y/A-Z ')
-    if New_game.lower() == 'y':
-        Start_Game()
-    else:
-        print('Thanks for playing our game XD')
-
-Start_Game()
+            break

@@ -1,7 +1,19 @@
-#user chooses between Single or multiplayer
+
+
+
+
 from random import choice
-slots=['','','','','','','','','']
-demo=['1','2','3','4','5','6','7','8','9']
+slots=['','','','','','','','',''] #global list used to insert (1 or more user's) or the computer's input. 
+demo=['1','2','3','4','5','6','7','8','9'] #demo list to show the user how to use the board.
+#player 1 chooses between single or multi
+def help():
+    print('''hello! this is TicTacToe made by Adham and supervised by our team '3x3.'
+the concept is pretty simple, you choose whether you want to play with the computer or with your friend and based on turns
+each player will try to hit his/her letter (X or Z) horizontally, vertically, or diagonally in 3 slots.
+who ever claims three consecutive of his letter, Wins the game!
+''') 
+
+
 def SingleOrMulti():
     gametype=''
     while gametype=='':
@@ -17,20 +29,26 @@ def SingleOrMulti():
         else:
             print('oh-oh. use y for yes and n for no. no capitalization.')
      
-def demoboard(board):
-    print('' +board[0]+ '  | ' +board[1]+ '  | '+board[2] )
-    print('' +board[3]+ '  | ' +board[4]+ '  | '+board[5] )
-    print('' +board[6]+ '  | ' +board[7]+ '  | '+board[8] )    
 
-def shwBoard(board):
+
+ 
+def shwBoard(board): #function that prints the board using a list.
     print('' +board[0]+ '  | ' +board[1]+ '  | '+board[2] )
     print('' +board[3]+ '  | ' +board[4]+ '  | '+board[5] )
     print('' +board[6]+ '  | ' +board[7]+ '  | '+board[8] )
+    print('-------------')
+
+
+
 
 #shwBoard(slots)    
     
     
-#user chooses who goes first            
+
+
+#player1 chooses who goes first, whether P1 is playing W comp or P2            
+
+
 def whosfirst():
     answertype=''
     while answertype=='':
@@ -47,15 +65,27 @@ def whosfirst():
             print('please stick with y for yes and n for no, no capitalization.')
 
 
+
+
 ###def multiTTT():
 
-def emptyspace(plyr_mve):
+
+
+
+def emptyspace(plyr_mve): #function that identifies blank spaces in the global list (slot)
+
+
     if slots[plyr_mve] == '':
         return True
     else:
         return False
 
-def compmove():
+
+
+
+def compmove(): #Function that chooses the comp move based on random choice built in function and stores it in (slots) list
+
+
     state=bool
     while state != True:    
         x =choice(list(range(8)))
@@ -66,18 +96,35 @@ def compmove():
         shwBoard(slots)
 
 
-def player1move(symb):
-    state = bool
+
+
+
+
+def player1move(symb): #function that lets the player choose his move and stores it into (slots) list 
+     
     shwBoard(demo)
-    while state !=True:
+    while True:
+
+
         loc=int(input("choose your move's place from 1-9 as stated in the board infront of you"))-1
         if emptyspace(loc) == True:
             slots[loc]=symb
             shwBoard(slots)
-            print(slots)
+
+
             break
+
+
+                
+            
+            
+    
         
-def boardfull():
+        
+        
+def boardfull(): #checks if the board is full and prints that game has ended.
+
+
     marker=0
     for i in slots:
         if i == "":
@@ -87,23 +134,11 @@ def boardfull():
         print("oh no it's a draw.")        
         return True
         
-'''
-def checkwin():
-    Player= ((slots[0] == slots[1] and slots[1] == slots[2]) =='X') or ((slots[3] == slots[4] and slots[4] == slots[5]) == 'X') or ((slots[6] == slots[7] and slots[7] == slots[8]) == 'X') or ((slots[0] == slots[3] and slots[3] == slots[6]) == 'X') or ((slots[1] == slots[4] and slots[4] == slots[7]) == 'X') or ((slots[2] == slots[5] and slots[5] == slots[8]) == 'X') or ((slots[0] == slots[4] and slots[4] == slots[8]) == 'X') or ((slots[2] == slots[4] and slots[4] == slots[6]) == 'X')
-    Comp=   ((slots[0] == slots[1] and slots[1] == slots[2]) =='Z') or ((slots[3] == slots[4] and slots[4] == slots[5]) == 'Z') or ((slots[6] == slots[7] and slots[7] == slots[8]) == 'Z') or ((slots[0] == slots[3] and slots[3] == slots[6]) == 'Z') or ((slots[1] == slots[4] and slots[4] == slots[7]) == 'Z') or ((slots[2] == slots[5] and slots[5] == slots[8]) == 'Z') or ((slots[0] == slots[4] and slots[4] == slots[8]) == 'Z') or ((slots[2] == slots[4] and slots[4] == slots[6]) == 'Z')
-    
-    if Player== True:
-        print('congrat! you won.')
-        return True
-        
-    elif Comp==True:
-        print('You lost to Ultron.')
-        return True
-        
-    else:
-        return False
-'''
-def checkwin(symb):
+
+
+def checkwin(symb):#checks if either X or Z hit one of the possible winning combinations.
+    status=True
+
 
     possible=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
     
@@ -112,10 +147,13 @@ def checkwin(symb):
         for i in item:
             emp_lst.append(slots[i])
         if emp_lst[0]!='' and emp_lst[0] == emp_lst[1] and emp_lst[1] == emp_lst[2]:
-            print('you won!')
-            return True
+            status=True
+            return status
     else:
-        return False
+        status=False
+        return status
+
+
                     
 '''
 def gameon():
@@ -127,46 +165,60 @@ def gameon():
         status=False
         return status
 '''
-def runGame():
-    mode=SingleOrMulti()
+
+
+def runGame(): # the central code that runs the game
+    help() #introduces player to the rules and the team
+    mode=SingleOrMulti() #user chooses game mode
     if mode == 'multi':
-        if whosfirst() == 'yes':
+        if whosfirst() == 'yes': #if player chooses to go first
             while True:
                 player1move('X')
                 checkwin('X')
                 boardfull()
-                if checkwin('X')==False:
+
+
+                if checkwin('X')==False: #if p1 move causes the game to move on without winning condition or draw, p2 plays
                     player1move('Z')
                     checkwin('Z')
-                    boardfull() 
-        else:
+                    boardfull()
+                else:
+                    print('you won recent player!')  #congrats the recent player for the win
+                    break
+        else:#if P2 is going to start first
             while True:
                 player1move('Z')
-                print(checkwin('Z'))
-                if checkwin('Z')==False:
+                checkwin('Z')
+                if checkwin('Z')==False: #if p2 move causes the game to move on without winning condition or draw, p1 plays
                     player1move('X')
-                    print(checkwin('X'))        
-    if mode == 'single':
-        if whosfirst() == 'yes':
+                    checkwin('X')
+                else:
+                    print('you won recent player!')  #congrats player for his win
+                    break
+    if mode == 'single': #if player chooses single with comp
+        if whosfirst()== 'yes': #player chooses to go first
+
+
             while True:
                 player1move('X')
                 checkwin('X')
                 boardfull()
-                if checkwin('X')==False:
+
+
+                if checkwin('X')==False: #if p1 move causes the game to move on without winning condition or draw, comp plays
                     compmove()
                     checkwin('Z')
                     boardfull()
-        else:
+                else:
+                    print('you won recent player!') #congrats recent player for the win
+                    break
+        else: #if comp plays first
             while True:
                 compmove()
-                print(checkwin('Z'))
-                if checkwin('Z')==False:
+                checkwin('Z')
+                if checkwin('Z')==False: #if Comp move causes the game to move on without winning condition or draw, p1 plays
                     player1move('X')
-                    print(checkwin('X'))
-            
-        
-
-        
-
-
-        
+                    checkwin('X')
+                else:
+                    print('you won recent player!')
+                    break

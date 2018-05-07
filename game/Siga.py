@@ -1,15 +1,22 @@
 
 from random import choice as randomChoice
+from time import sleep
 
 
 def help():
-	print('''the game: Siga
+	print('''Siga v0.1 Beta
+By: Hazem Elmasry
 
-in which two players place three pieces on a 3x3 grids and moveDest a piece at a time.
+How to play:
 
-the goal is to get your three pieces in a row
+	Two players place three pieces on a 3x3 grid and move one piece at a time each turn.
 
-you're allowed to moveDest to the square next to you or the square after it, Horizontally, Vertically, or Diagonally. But you're not allowed to jump over the other player's piece.''')
+	The goal is to get your three pieces in a row
+
+	You're allowed to move to the square next to you or the square after it, Horizontally, Vertically, or Diagonally.
+	But you're not allowed to jump over the other player's piece.\n\n\n
+	
+Good luck!\n\n\n''')
 
 
 def initialize():
@@ -26,8 +33,8 @@ def initialize():
 	
 	# will make the player able to choose their symbol later.
 
-	Y = ['Y', 'y', 'yes', 'Yes', 'YES']
-	N = ['N', 'n', 'no', 'No', 'NO']
+	Y = {'Y', 'y', 'yes', 'Yes', 'YES'}
+	N = {'N', 'n', 'no', 'No', 'NO'}
 
 	while True:
 
@@ -197,130 +204,125 @@ def wincheck(Board,player,allmoved=False):
 def runGame():
 
 	help()
-	print()
-	print()
 
 	info = initialize()
 	Board = info['Board']
-	Y = ['Y', 'y', 'yes', 'Yes', 'YES']
 
 	while True:
-		
-		if info['Multiplayer']:
 
-			P1 = info['P1']
-			P2 = info['P2']
-			P1moved = {7:False,8:False,9:False}
-			P2moved = {1:False,2:False,3:False}
-
-			print()
-			print('P1\'s piece is "^"')
-			print('P2\'s is "v"')
-
-			if info['P1First']:
-
-				while True:
-
-					print('P1\'s Turn:')
-					showBoard(Board)
-					P1moved[playermoved(Board,P1,P2)] = True
-					
-					if wincheck(Board,P1,all(P1moved.values())):
-						showBoard(Board)
-						print('P1 Won!')
-						break
-					
-					print('P2\'s Turn:')
-					showBoard(Board)
-					P2moved[playermoved(Board,P2,P1)] = True
-					
-					if wincheck(Board,P2,all(P2moved.values())):
-						showBoard(Board)
-						print('P2 Won!')
-						break
+		try:
 			
-			elif not info['P1First']:
+			if info['Multiplayer']:
 
-				while True:
+				P1 = info['P1']
+				P2 = info['P2']
+				P1moved = {7:False,8:False,9:False}
+				P2moved = {1:False,2:False,3:False}
 
-					print('P2\'s Turn:')
-					showBoard(Board)
-					P2moved[playermoved(Board,P2,P1)] = True
-					
-					if wincheck(Board,P2,all(P2moved.values())):
+				print()
+				print('P1\'s piece is "^"')
+				print('P2\'s is "v"')
+
+				if info['P1First']:
+
+					while True:
+
+						print('P1\'s Turn:')
 						showBoard(Board)
-						print('P2 Won!')
-						break
-					
-					print('P1\'s Turn:')
-					showBoard(Board)
-					P1moved[playermoved(Board,P1,P2)] = True
-					
-					if wincheck(Board,P1,all(P1moved.values())):
+						P1moved[playermoved(Board,P1,P2)] = True
+
+						if wincheck(Board,P1,all(P1moved.values())):
+							showBoard(Board)
+							print('P1 Won!')
+							break
+						
+						print('P2\'s Turn:')
 						showBoard(Board)
-						print('P1 Won!')
-						break
+						P2moved[playermoved(Board,P2,P1)] = True
 
+						if wincheck(Board,P2,all(P2moved.values())):
+							showBoard(Board)
+							print('P2 Won!')
+							break
+					break
 
-		elif not info['Multiplayer']:
+				elif not info['P1First']:
 
-			P1 = info['P1']
-			P2 = info['Computer']
-			P1moved = {7:False,8:False,9:False}
-			P2moved = {1:False,2:False,3:False}
+					while True:
 
-			print()
-			print('Computer\'s piece is "v"')
-
-			if info['P1First']:
-
-				while True:
-					
-					showBoard(Board)
-					P1moved[playermoved(Board,P1,P2)] = True
-					
-					if wincheck(Board,P1,all(P1moved.values())):
+						print('P2\'s Turn:')
 						showBoard(Board)
-						print('P1 Won!')
-						break
+						P2moved[playermoved(Board,P2,P1)] = True
 
-					P2moved[compumoved(Board,P2,P1)] = True
-					
-					if wincheck(Board,P2,all(P2moved.values())):
+						if wincheck(Board,P2,all(P2moved.values())):
+							showBoard(Board)
+							print('P2 Won!')
+							break
+						
+						print('P1\'s Turn:')
 						showBoard(Board)
-						print('You lost to Ultron!')
-						break
+						P1moved[playermoved(Board,P1,P2)] = True
+
+						if wincheck(Board,P1,all(P1moved.values())):
+							showBoard(Board)
+							print('P1 Won!')
+							break
+					break
+
+			elif not info['Multiplayer']:
+
+				P1 = info['P1']
+				P2 = info['Computer']
+				P1moved = {7:False,8:False,9:False}
+				P2moved = {1:False,2:False,3:False}
+
+				print()
+				print('Computer\'s piece is "v"')
+
+				if info['P1First']:
+
+					while True:
+						
+						showBoard(Board)
+						P1moved[playermoved(Board,P1,P2)] = True
+						
+						if wincheck(Board,P1,all(P1moved.values())):
+							showBoard(Board)
+							print('P1 Won!')
+							break
+
+						P2moved[compumoved(Board,P2,P1)] = True
+						
+						if wincheck(Board,P2,all(P2moved.values())):
+							showBoard(Board)
+							print('You lost to Ultron!')
+							break
+					break
+				
+				elif not info['P1First']:
+
+					while True:
+
+						P2moved[compumoved(Board,P2,P1)] = True
+						
+						if wincheck(Board,P2,all(P2moved.values())):
+							showBoard(Board)
+							print('You lost to Ultron!')
+							break
+						
+						showBoard(Board)
+						P1moved[playermoved(Board,P1,P2)] = True
+						
+						if wincheck(Board,P1,all(P1moved.values())):
+							showBoard(Board)
+							print('P1 Won!')
+							break
+					break
+
+		except Exception as a:
+			if a == KeyboardInterrupt:
+				break
 			
-			elif not info['P1First']:
-
-				while True:
-
-					P2moved[compumoved(Board,P2,P1)] = True
-					
-					if wincheck(Board,P2,all(P2moved.values())):
-						showBoard(Board)
-						print('You lost to Ultron!')
-						break
-					
-					showBoard(Board)
-					P1moved[playermoved(Board,P1,P2)] = True
-					
-					if wincheck(Board,P1,all(P1moved.values())):
-						showBoard(Board)
-						print('P1 Won!')
-						break
-
-
-		again = input('Wanna play again? [Y/anykey]:  ')
-		
-		if again in Y:
-			print()
-			print('Alright! Another round!')
-			continue
-		else:
-			print()
-			print('Hope you enjoyed!')
-			break
-
-
-
+			else:
+				print('your input was invalid')
+				sleep(2)
