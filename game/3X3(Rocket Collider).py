@@ -1,3 +1,5 @@
+from getpass import getpass
+
 #slots=['0','1','2','3','4','5','6','7','8','9']
 def showBoard(Gboard):
     '''showboard(board) makes the board and assigns a number for each slot,
@@ -9,7 +11,7 @@ def showBoard(Gboard):
     print('' +Gboard[7]+ ' | ' +Gboard[8]+ ' | '+Gboard[9] )
 #showBoard(slots)
 
-def rungame():
+def runGame():
     '''rungame() initiates the gaming sequnce, with no need for parameters
     the board is printed and the game starts'''
     slots=['[0]','[1]','[2]','[3]','[4]','[5]','[6]','[7]','[8]','[9]']
@@ -25,17 +27,17 @@ def rungame():
             Start_point=int(input('''!Cell invalid!
 P{:d} Pick an valid cell: '''.format(i)))
             print()
-            if 0<Start_point<9:
-                continue
+            if 0<Start_point and Start_point<10:
+                break
         while slots[Start_point]=='P2' or slots[Start_point]=='P1' or slots[Start_point]=='P3':
-            Start_point=int(input('P{:d} Pick an unoccupied cell: '.format(i)))
+            Start_point=int(getpass('P{:d} Pick an unoccupied cell: '.format(i)))
             print()
             if slots[Start_point]!='P2' and slots[Start_point]!='P1' and slots[Start_point]!='P3':
                 print()
                 break
-        slots[Start_point]='P{}'.format(i)
+        slots[Start_point]='P{} '.format(i)
         Movement_Tracing+='{}'.format(Start_point)   
-    slots[Start_point]='P{}'.format(i)
+    slots[Start_point]='P{} '.format(i)
     Movement_Tracing+='{}'.format(Start_point)        
     showBoard(slots)
     print()
@@ -49,9 +51,9 @@ P{:d} Pick an valid cell: '''.format(i)))
     while x!=0:
         slots=['[0]','[1]','[2]','[3]','[4]','[5]','[6]','[7]','[8]','[9]']
         for i in range(1,4):
-            Next_move=int(input('P{:d} Pick a slot to move to: '.format(i)))
+            Next_move=int(getpass('P{:d} Pick a slot to move to \n(don\'t worry, it won\'t show on screen): '.format(i)))
             print()
-            slots[Next_move]='P{}'.format(i)
+            slots[Next_move]='P{} '.format(i)
             Movement_Tracing+='{}'.format(Next_move)
         showBoard(slots)
         if Movement_Tracing[z-1] == Movement_Tracing[z-2] == Movement_Tracing[z]:
@@ -71,17 +73,17 @@ P{:d} Pick an valid cell: '''.format(i)))
             print()
             break
         
-    Newgame()
+#     Newgame()
 
 
-def Newgame():
-    '''NewGame() is a function that starts a new round of the game
-     after taking the concent of the user
-    '''
-    New_game=input('Wanna play again? Y/A-Z ')
-    if New_game.lower() == 'y':
-        rungame()
-    else:
-        print('Thanks for playing our game XD')
+# def Newgame():
+#     '''NewGame() is a function that starts a new round of the game
+#      after taking the concent of the user
+#     '''
+#     New_game=input('Wanna play again? Y/A-Z ')
+#     if New_game.lower() == 'y':
+#         rungame()
+#     else:
+#         print('Thanks for playing our game XD')
 
-rungame()
+runGame()
