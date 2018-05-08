@@ -228,6 +228,3 @@ def runGame():
                 else:
                     print('you won recent player!')
                     break
-
-
-runGame()
