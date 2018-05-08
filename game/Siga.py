@@ -4,6 +4,12 @@ from time import sleep
 
 
 def help():
+
+	'''
+	Prints a brief manual for the game, no parameters needed
+	No parameters, returns None
+	'''
+
 	print('''Siga v0.1 Beta
 By: Hazem Elmasry
 
@@ -20,22 +26,40 @@ Good luck!\n\n\n''')
 
 
 def initialize():
+	'''
+	Called once. initializes Siga's unchanging options. no parameters.
+
+	Returns a dictionary as follows:
+
+		'Board': 		(dict) 	The game's Board dictionary,
+		'Multiplayer': 	(bool) 	Multiplayer T/F depending on user input,
+		'P1First': 		(bool) 	Player 1 goes first T/F depending on user input,
+		'P1': 			(str) 	First Player's mark,
+		'P2': 			(str) 	Second player's mark,
+		'Computer':		(str) 	computer's mark
+
+
+	THIS FUNCTION CONTAINS INPUT PROMPTS
+
+	'''
 
 	P1 = '^'
 	P2 = 'v'
 	comp = 'v'
 
+	# initialized board
 	Board = {
 		1:"v" , 2:"v" , 3:"v" ,
 		4:" " , 5:" " , 6:" " ,
 		7:"^" , 8:"^" , 9:"^" ,
 	}
 	
-	# will make the player able to choose their symbol later.
+	# will later make it possible for players to choose their and the computer's mark from an input prompt
 
 	Y = {'Y', 'y', 'yes', 'Yes', 'YES'}
 	N = {'N', 'n', 'no', 'No', 'NO'}
 
+	# The multiplayer prompt loop
 	while True:
 
 		multi = input('Multiplayer? [Y/N]:  ')
@@ -52,6 +76,7 @@ def initialize():
 			print('this isn\'t a correct choice!')
 			continue
 
+	# The who is first prompt loop
 	while True:
 
 		P1First = input('P1, wanna go first? [Y/N]:  ')
@@ -81,6 +106,36 @@ def initialize():
 
 def showBoard(Board,Labels=True):
 
+	'''
+	Prints the game board, returns None
+
+	Params:
+		Board (any linear indexed iterable),
+		Labels = default True (bool) : either shows slot label or hides it
+
+	examples:
+
+		Labels = True:
+			[1] | [2] | [3]
+			 1  |  2  |  3
+		   -----------------
+			[4] | [5] | [6]
+			 4  |  5  |  6
+		   -----------------
+			[7] | [8] | [9]
+			 7  |  8  |  9
+
+		Labels = False:
+			 1  |  2  |  3
+		   -----------------
+			 4  |  5  |  6
+		   -----------------
+			 7  |  8  |  9
+
+	This function is reusable for all linear iterables. Import it, no problems.
+
+	'''
+
 	if type(Board) == dict:
 		PBoard = Board.values()
 
@@ -96,11 +151,23 @@ def showBoard(Board,Labels=True):
 
 def playermoved(Board,currentPMark,otherPMark):
 
+	'''
+	Processes the player's movement and checks its validity specifically based on the Siga rules.
+
+	Params:
+		Board (dict)
+		currentPMark (str): Current turn player's mark. used for conditions and comparisons
+		otherPMark (str): The other player's mark. also used as the one above
+		
+	returns the movement origin of the player for using it to check if all the player's pieces moved or not
+	'''
+	# list of possible corner movement combinations
 	corners = [
 		{1,9},
 		{3,7}
 	]
 
+	# list of possible 2-block jump movement combinations
 	jumps = [
 		{1,3},
 		{1,7},
@@ -111,16 +178,19 @@ def playermoved(Board,currentPMark,otherPMark):
 		{4,6}
 	]
 
+	# list of possible out-of-range movement combinations
 	ambition = [
 		{1,8},
 		{1,6},
 		{2,9},
 		{2,7},
+		{3,4},
 		{3,8},
-		{3,9},
 		{4,9},
-		{6,7},
+		{6,7}
 	]
+
+	# I used to try a mathematical approach instead off possible combinations approach but it was never consistent across all possible movements. For example: moving from square 4 to square 3 should mathematically mean a 1-block movement, but it actually is an out-of-range movement.
 
 	# error dict
 	# error action dict
@@ -130,12 +200,17 @@ def playermoved(Board,currentPMark,otherPMark):
 
 	while True:
 
-
 		while True:
 
 			moveOrigin = int(input('Choose a square where you have one of your pieces:  '))
 
-			if Board[moveOrigin] != currentPMark:
+			if moveOrigin not in Board:
+
+				print('you chose something that isn\'t on the Board to begin with.')
+				continue
+
+			elif Board[moveOrigin] != currentPMark:
+
 				print('please choose one of your pieces')
 				continue
 
@@ -145,45 +220,64 @@ def playermoved(Board,currentPMark,otherPMark):
 
 			moveDest = int(input('Choose a square where you want it to go:  '))
 
-			if Board[moveDest] != " ":
+			if moveDest not in Board:
+
+				print('you chose something that isn\'t on the Board to begin with.')
+				continue
+
+			elif Board[moveDest] != " ":
+				
 				print('you can\'t move there!')
 				continue
 
-			break
 
-		cornerJumps = {moveOrigin,moveDest} in corners
-		normalJumps = {moveOrigin,moveDest} in jumps
-		ambitious = {moveOrigin,moveDest} in ambition
-
-		if (moveOrigin not in Board) or (moveDest not in Board):
-
-			print('you chose something that isn\'t on the Board to begin with.')
-			continue
+			cornerJumps = {moveOrigin,moveDest} in corners
+			normalJumps = {moveOrigin,moveDest} in jumps
+			ambitious = {moveOrigin,moveDest} in ambition
 
 
-		elif ambitious:
+			if ambitious:
 
-			print('can\'t move this far!')
-			continue
+				print('can\'t move this far!')
+				continue
 
-		elif (normalJumps or cornerJumps) and Board[(moveDest + moveOrigin)/2] == otherPMark:
+			elif (normalJumps or cornerJumps) and Board[(moveDest + moveOrigin)/2] == otherPMark:
 
-			print('can\'t jump over the other player\'s piece!')
-			continue
+				print('can\'t jump over the other player\'s piece!')
+				continue
 
-		else:
-			Board[moveDest] = currentPMark
-			Board[moveOrigin] = " "
-			break
+			else:
 
-	del(corners,jumps,ambition)
-	return moveOrigin
+				# if there was no problem with the player choices
+				Board[moveDest] = currentPMark
+				Board[moveOrigin] = " "
+				# one successful move done
+				break
+
+	del(corners,jumps,ambition) # no need to keep those around
+	return moveOrigin # I use the move origin to make sure later that the player moved all the three pieces before winning, another rule of Sega. 
+	# The condition is checked on both wincheck() and runGame()
 
 
 def compumoved(Board,currentPMark,otherPMark):
 
+	'''
+	Processes the computer's movement and checks its validity specifically based on the Siga rules.
+	This function is derived from playermoved() but with automated choosing system.
+
+	Params:
+		Board (dict)
+		currentPMark (str): Current turn computer's mark. used for conditions and comparisons
+		otherPMark (str): The player's mark. also used as the one above
+		
+	returns the movement origin of the player for using it to check if all the player's pieces moved or not
+	'''
+
 	moveOrigins = []
 	moveDests = []
+
+	# get a list of all the possible piece choices (3 choices only) and all the possible destination choices (3 choices only) proior to choosing
+	# to reduce the number of random choices (9 choices on board) and condition checking
 
 	for square in Board:
 		if Board[square] == ' ':
@@ -213,10 +307,10 @@ def compumoved(Board,currentPMark,otherPMark):
 		{1,6},
 		{2,9},
 		{2,7},
+		{3,4},
 		{3,8},
-		{3,9},
 		{4,9},
-		{6,7},
+		{6,7}
 	]
 
 	while True:
@@ -245,8 +339,21 @@ def compumoved(Board,currentPMark,otherPMark):
 
 def wincheck(Board,player,allmoved=False):
 
+	'''
+	Checks if a player won based on the given params and specifically for Siga's rules.
+
+	Params:
+		Board (dict)
+		player (str): the checked player's mark
+		allmoved = default False (bool): True means that all the player's pieces moved.
+
+	returns True for a win, False for not
+	'''
+
+	# the possible win cases
 	win = [{1,2,3},{4,5,6},{7,8,9},{1,4,7},{2,5,8},{3,6,9},{1,5,9},{3,5,7}]
 	
+	# this set is later compared to the win cases to see if it's part of that list
 	P = set()
 
 	for square in Board:
@@ -263,6 +370,9 @@ def wincheck(Board,player,allmoved=False):
 		
 
 def runGame():
+	'''
+	Main game runner, called on mainframe. No parameters, returns None.
+	'''
 
 	help()
 
@@ -273,18 +383,20 @@ def runGame():
 
 		try:
 			
-			if info['Multiplayer']:
+			if info['Multiplayer']: # if multiplayer is true
 
-				P1 = info['P1']
-				P2 = info['P2']
-				P1moved = {7:False,8:False,9:False}
+				P1 = info['P1'] # '^'
+				P2 = info['P2'] # 'v'
+
+				# turn this move checker into a function
+				P1moved = {7:False,8:False,9:False} # all pieces didn't move: False False False
 				P2moved = {1:False,2:False,3:False}
 
 				print()
 				print('P1\'s piece is "^"')
 				print('P2\'s is "v"')
 
-				if info['P1First']:
+				if info['P1First']: # if player 1 goes first is True
 
 					while True:
 
@@ -380,7 +492,10 @@ def runGame():
 							break
 					break
 
+		# any error will be from user input (for now)
 		except Exception as a:
+
+			# To allow a ctrl+c exit
 			if a == KeyboardInterrupt:
 				break
 			

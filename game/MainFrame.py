@@ -1,3 +1,5 @@
+# mainframe by Hazem Elmasry 1710653
+
 import Siga
 import TicTacToe as Tic
 import RocketCollider as Rocket
@@ -11,7 +13,7 @@ print('Welcome to our game!\n')
 print('3x3 is a game project that consists of 3 board games made by 3 students.')
 print('The games share a 3x3 grid layout too. Hence the name.\n')
 
-print('One of the games is the famous tic tac toe, \nthe second is the beloved traditional egyptian game \'Siga\', \nand the third is an original game that we created from scratch called \'Rocket Collider\'. ')
+print('One of the games is the famous tic tac toe (By Adham 1710056), \nthe second is the beloved traditional egyptian game \'Siga\' (By Hazem 1710653), \nand the third is an original game that we created from scratch called \'Rocket Collider\'. (By Mahmoud 1710472) ')
 
 print('We hope you enjoy your time playing!\n\n\n')
 
