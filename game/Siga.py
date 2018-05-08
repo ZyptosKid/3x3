@@ -198,61 +198,62 @@ def playermoved(Board,currentPMark,otherPMark):
 	# if errordict[error]: 
 	# 	exec(erroractiondict[error]) and return False 
 
+
+
 	while True:
 
-		while True:
+		moveOrigin = int(input('Choose a square where you have one of your pieces:  '))
 
-			moveOrigin = int(input('Choose a square where you have one of your pieces:  '))
+		if moveOrigin not in Board:
 
-			if moveOrigin not in Board:
+			print('you chose something that isn\'t on the Board to begin with.')
+			continue
 
-				print('you chose something that isn\'t on the Board to begin with.')
-				continue
+		elif Board[moveOrigin] != currentPMark:
 
-			elif Board[moveOrigin] != currentPMark:
+			print('please choose one of your pieces')
+			continue
 
-				print('please choose one of your pieces')
-				continue
+		break
+	
+	while True:
 
+		moveDest = int(input('Choose a square where you want it to go:  '))
+
+		if moveDest not in Board:
+
+			print('you chose something that isn\'t on the Board to begin with.')
+			continue
+
+		elif Board[moveDest] != " ":
+			
+			print('you can\'t move there!')
+			continue
+
+
+		cornerJumps = {moveOrigin,moveDest} in corners
+		normalJumps = {moveOrigin,moveDest} in jumps
+		ambitious = {moveOrigin,moveDest} in ambition
+
+
+		if ambitious:
+
+			print('can\'t move this far!')
+			continue
+
+		elif (normalJumps or cornerJumps) and Board[(moveDest + moveOrigin)/2] == otherPMark:
+
+			print('can\'t jump over the other player\'s piece!')
+			continue
+
+		else:
+
+			# if there was no problem with the player choices
+			Board[moveDest] = currentPMark
+			Board[moveOrigin] = " "
+			# one successful move done
 			break
-		
-		while True:
 
-			moveDest = int(input('Choose a square where you want it to go:  '))
-
-			if moveDest not in Board:
-
-				print('you chose something that isn\'t on the Board to begin with.')
-				continue
-
-			elif Board[moveDest] != " ":
-				
-				print('you can\'t move there!')
-				continue
-
-
-			cornerJumps = {moveOrigin,moveDest} in corners
-			normalJumps = {moveOrigin,moveDest} in jumps
-			ambitious = {moveOrigin,moveDest} in ambition
-
-
-			if ambitious:
-
-				print('can\'t move this far!')
-				continue
-
-			elif (normalJumps or cornerJumps) and Board[(moveDest + moveOrigin)/2] == otherPMark:
-
-				print('can\'t jump over the other player\'s piece!')
-				continue
-
-			else:
-
-				# if there was no problem with the player choices
-				Board[moveDest] = currentPMark
-				Board[moveOrigin] = " "
-				# one successful move done
-				break
 
 	del(corners,jumps,ambition) # no need to keep those around
 	return moveOrigin # I use the move origin to make sure later that the player moved all the three pieces before winning, another rule of Sega. 
