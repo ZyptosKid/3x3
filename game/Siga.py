@@ -79,14 +79,19 @@ def initialize():
 		}
 
 
-def showBoard(Board):
+def showBoard(Board,Labels=True):
 
 	if type(Board) == dict:
 		PBoard = Board.values()
 
-	print(
-		'\n [1] | [2] | [3]\n  {}  |  {}  |  {} \n-----------------\n [4] | [5] | [6]\n  {}  |  {}  |  {} \n-----------------\n [7] | [8] | [9]\n  {}  |  {}  |  {} \n'.format(*PBoard)
-		)
+	else:
+		PBoard = Board
+
+	if Labels:
+		print('\n [1] | [2] | [3]\n  {}  |  {}  |  {} \n-----------------\n [4] | [5] | [6]\n  {}  |  {}  |  {} \n-----------------\n [7] | [8] | [9]\n  {}  |  {}  |  {} \n'.format(*PBoard))
+	
+	else:
+		print('\n  {}  |  {}  |  {} \n-----------------\n  {}  |  {}  |  {} \n-----------------\n  {}  |  {}  |  {} \n'.format(*PBoard))
 
 
 def playermoved(Board,currentPMark,otherPMark):

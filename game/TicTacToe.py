@@ -41,7 +41,7 @@ def shwBoard(board):
     # print('' +board[6]+ '  | ' +board[7]+ '  | '+board[8] )
     # print('-------------')
 
-    showBoard(board)
+    showBoard(board,Labels=False)
 
 
 
@@ -136,7 +136,7 @@ def boardfull():
 
     marker=0
     for i in slots:
-        if i == "":
+        if i == ' ':
             marker+=1
             return False
     if marker == 0:
@@ -228,3 +228,6 @@ def runGame():
                 else:
                     print('you won recent player!')
                     break
+
+
+runGame()
