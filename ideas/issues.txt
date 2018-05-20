@@ -1,0 +1,87 @@
+post your issues here as follows:
+[folder->file][line][problem][additional info.]
+
+
+
+
+
+
+/// all the bugs indented in this are patched and resolved.
+
+	[Siga][somewhere][add sleep to player turn print]
+	[Siga][somewhere][
+		the play function doesn't check input validity until the player finishes inputting everything
+	]
+
+	[Siga][playermove & compumove][
+		moving from 4 to 2 when p2 is in 3 produces a (you can't jump) error.
+		Try:
+			instead of a mathematical approach, try a list of sets of all the possible "2 square" jumps
+	]
+
+
+	[TicTacToe][either the runGame func/ or the compmove func][COLD BE infinite loop bug][
+
+		reproduction:
+
+		terminal:
+		///ran Tictactoe///
+
+		are you alone? y for yes and n for no please.y
+		alright! you'll play with Ultron :)
+		Player 1, do you wanna go first? y for yes and n for no please.n
+		Ultron will go first. be careful from his moves.
+
+		^C
+
+		Traceback (most recent call last):
+			File "MainFrame.py", line 51, in <module>
+				Tic.runGame()
+			File "TicTacToe.py", line 223, in runGame
+				compmove()
+			File "TicTacToe.py", line 100, in compmove
+				x =choice(list(range(8)))
+
+		KeyboardInterrupt
+
+
+		update #01:
+
+			///from test.py:///
+
+			def compmove(): 
+				'''Function that chooses the comp move based on random choice built in function and stores it in (slots) list'''
+
+
+				state=bool
+				while state != True:    
+					# x =choice(list(range(8))) causes some error.. I don't know
+					x = choice([0,1,2,3,4,5,6,7,8])
+					print(x)
+					y=emptyspace(x)
+					print(y)
+					state=y 
+					print(state)    
+				if state == True:
+					slots[x]='Z'
+					shwBoard(slots)
+
+			doing this will print false all the time, which means there's a problem with the emptyspace function (probably)
+
+
+		update #02 [final]:
+
+			issue resolved. emptyspace compares its argument with '', not ' '.
+			and now that I changed the slots from '' to ' ' for the output to avoid grid shifting, it screwed up the code.
+			This one's on me.
+	]
+
+	[RocketCollider][runGame>pick a starting point][
+		players pile up on each other if they choose the same starting point.
+
+		problem: the while loop's condition is for P1, P2, and P3, but the assigning of P1,2, and 3 on the slots list comes AFTER the loop itself, so the condition always returns false
+
+		solution: instead of testing the condition on P1,2, and 3, I added a set() that directly records the input by every user of the three. the while loop tests if the new input is part of the set, if true, the user gets in the loop and has to input a different choice
+		note: choices are recorded outside of the loop to avoid piling them up, test with print to make sure.
+
+	]
