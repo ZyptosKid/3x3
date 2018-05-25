@@ -1,6 +1,24 @@
+__author__ = "Hazem Elmasry"
+
 
 from random import choice as randomChoice
 from time import sleep
+
+
+
+# Globals:
+Y = {'Y', 'y', 'yes', 'Yes', 'YES'}
+N = {'N', 'n', 'no', 'No', 'NO'}
+
+P1 = '^'
+P2 = comp = 'v'
+
+# initialized board
+Board = {
+	1:P2 , 2:P2 , 3:P2 ,
+	4:" ", 5:" ", 6:" ",
+	7:P1 , 8:P1 , 9:P1 ,
+}
 
 
 def help():
@@ -10,19 +28,20 @@ def help():
 	No parameters, returns None
 	'''
 
-	print('''Siga v0.1 Beta
-By: Hazem Elmasry
+	print('''
+	Siga v1
+	By: Hazem Elmasry
 
-How to play:
+	How to play:
 
-	Two players place three pieces on a 3x3 grid and move one piece at a time each turn.
+		Two players place three pieces on a 3x3 grid and move one piece at a time each turn.
 
-	The goal is to get your three pieces in a row
+		The goal is to get your three pieces in a row
 
-	You're allowed to move to the square next to you or the square after it, Horizontally, Vertically, or Diagonally.
-	But you're not allowed to jump over the other player's piece.\n\n\n
-	
-Good luck!\n\n\n''')
+		You're allowed to move to the square next to you or the square after it, Horizontally, Vertically, or Diagonally.
+		But you're not allowed to jump over the other player's piece.\n\n\n
+		
+	Good luck!\n\n\n''')
 
 
 def initialize():
@@ -31,77 +50,72 @@ def initialize():
 
 	Returns a dictionary as follows:
 
-		'Board': 		(dict) 	The game's Board dictionary,
 		'Multiplayer': 	(bool) 	Multiplayer T/F depending on user input,
-		'P1First': 		(bool) 	Player 1 goes first T/F depending on user input,
-		'P1': 			(str) 	First Player's mark,
-		'P2': 			(str) 	Second player's mark,
-		'Computer':		(str) 	computer's mark
-
+		'P1First': 		(bool) 	Player 1 goes first T/F depending on user input
 
 	THIS FUNCTION CONTAINS INPUT PROMPTS
 
 	'''
 
-	P1 = '^'
-	P2 = 'v'
-	comp = 'v'
-
-	# initialized board
-	Board = {
-		1:"v" , 2:"v" , 3:"v" ,
-		4:" " , 5:" " , 6:" " ,
-		7:"^" , 8:"^" , 9:"^" ,
-	}
-	
-	# will later make it possible for players to choose their and the computer's mark from an input prompt
-
-	Y = {'Y', 'y', 'yes', 'Yes', 'YES'}
-	N = {'N', 'n', 'no', 'No', 'NO'}
-
-	# The multiplayer prompt loop
 	while True:
 
-		multi = input('Multiplayer? [Y/N]:  ')
-
-		if multi in Y:
-			multi = True
-			break
-
-		elif multi in N:
-			multi = False
-			break
-
+		multi = multiplayer(multi = input('Multiplayer? [Y/N]:  '))
+		if any(multi):
+			pass
 		else:
-			print('this isn\'t a correct choice!')
 			continue
 
-	# The who is first prompt loop
-	while True:
-
-		P1First = input('P1, wanna go first? [Y/N]:  ')
-
-		if P1First in Y:
-			P1First = True
+		P1First = whoFirst(P1First = input('P1, wanna go first? [Y/N]:  '))
+		if any(P1First):
 			break
-
-		elif P1First in N:
-			P1First = False
-			break
-
 		else:
-			print('this isn\'t a correct choice!')
 			continue
 
 
 	return {
-		'Board':Board,
-		'Multiplayer':multi,
-		'P1First':P1First,
-		'P1':P1,
-		'P2':P2,
-		'Computer':comp
+		'Multiplayer':multi[1],
+		'P1First':P1First[1],
 		}
+
+
+def multiplayer(multi):
+
+	global Y, N
+
+	if multi in Y.union(N):
+
+		if multi in Y:
+			multi = True
+		else:
+			multi = False
+
+		return True,multi
+
+	else:
+
+		print('this isn\'t a correct choice!')
+
+		return False,False
+
+
+def whoFirst(P1First):
+
+	global Y, N
+
+	if P1First in Y.union(N):
+
+		if P1First in Y:
+			P1First = True
+		else:
+			P1First = False
+
+		return True,P1First
+
+	else:
+
+		print('this isn\'t a correct choice!')
+		
+		return False
 
 
 def showBoard(Board,Labels=True):
@@ -202,57 +216,81 @@ def playermoved(Board,currentPMark,otherPMark):
 
 	while True:
 
-		moveOrigin = int(input('Choose a square where you have one of your pieces:  '))
+		try:
 
-		if moveOrigin not in Board:
+			moveOrigin = int(input('Choose a square where you have one of your pieces:  '))
 
-			print('you chose something that isn\'t on the Board to begin with.')
-			continue
+			if moveOrigin not in Board:
 
-		elif Board[moveOrigin] != currentPMark:
+				print('you chose something that isn\'t on the Board to begin with.')
+				continue
 
-			print('please choose one of your pieces')
-			continue
+			elif Board[moveOrigin] != currentPMark:
 
-		break
-	
+				print('please choose one of your pieces')
+				continue
+
+			break
+		
+		except Exception as a:
+
+			# To allow a ctrl+c exit
+			if a == KeyboardInterrupt:
+				break
+			
+			else:
+				print('your input was invalid')
+				continue
+
 	while True:
 
-		moveDest = int(input('Choose a square where you want it to go:  '))
+		try:
 
-		if moveDest not in Board:
+			moveDest = int(input('Choose a square where you want it to go:  '))
 
-			print('you chose something that isn\'t on the Board to begin with.')
-			continue
+			if moveDest not in Board:
 
-		elif Board[moveDest] != " ":
+				print('you chose something that isn\'t on the Board to begin with.')
+				continue
+
+			elif Board[moveDest] != " ":
+				
+				print('you can\'t move there!')
+				continue
+
+
+			cornerJumps = {moveOrigin,moveDest} in corners
+			normalJumps = {moveOrigin,moveDest} in jumps
+			ambitious = {moveOrigin,moveDest} in ambition
+
+
+			if ambitious:
+
+				print('can\'t move this far!')
+				continue
+
+			elif (normalJumps or cornerJumps) and Board[(moveDest + moveOrigin)/2] == otherPMark:
+
+				print('can\'t jump over the other player\'s piece!')
+				continue
+
+			else:
+
+				# if there was no problem with the player choices
+				Board[moveDest] = currentPMark
+				Board[moveOrigin] = " "
+				# one successful move done
+				break
+
+		except Exception as a:
+
+			# To allow a ctrl+c exit
+			if a == KeyboardInterrupt:
+				break
 			
-			print('you can\'t move there!')
-			continue
-
-
-		cornerJumps = {moveOrigin,moveDest} in corners
-		normalJumps = {moveOrigin,moveDest} in jumps
-		ambitious = {moveOrigin,moveDest} in ambition
-
-
-		if ambitious:
-
-			print('can\'t move this far!')
-			continue
-
-		elif (normalJumps or cornerJumps) and Board[(moveDest + moveOrigin)/2] == otherPMark:
-
-			print('can\'t jump over the other player\'s piece!')
-			continue
-
-		else:
-
-			# if there was no problem with the player choices
-			Board[moveDest] = currentPMark
-			Board[moveOrigin] = " "
-			# one successful move done
-			break
+			else:
+				print('your input was invalid')
+				continue
 
 
 	del(corners,jumps,ambition) # no need to keep those around
@@ -378,128 +416,111 @@ def runGame():
 	help()
 
 	info = initialize()
-	Board = info['Board']
+	global Board, P1, P2, comp, Y, N
 
-	while True:
+	while True:		
 
-		try:
-			
-			if info['Multiplayer']: # if multiplayer is true
+		if info['Multiplayer']: # if multiplayer is true
 
-				P1 = info['P1'] # '^'
-				P2 = info['P2'] # 'v'
+			# turn this move checker into a function
+			P1moved = {7:False,8:False,9:False} # all pieces didn't move: False False False
+			P2moved = {1:False,2:False,3:False}
 
-				# turn this move checker into a function
-				P1moved = {7:False,8:False,9:False} # all pieces didn't move: False False False
-				P2moved = {1:False,2:False,3:False}
+			print()
+			print('P1\'s piece is "{}"'.format(P1))
+			print('P2\'s is "{}"'.format(P2))
 
-				print()
-				print('P1\'s piece is "^"')
-				print('P2\'s is "v"')
+			if info['P1First']: # if player 1 goes first is True
 
-				if info['P1First']: # if player 1 goes first is True
+				while True:
 
-					while True:
+					print('P1\'s Turn:')
+					showBoard(Board)
+					P1moved[playermoved(Board,P1,P2)] = True
 
-						print('P1\'s Turn:')
+					if wincheck(Board,P1,all(P1moved.values())):
 						showBoard(Board)
-						P1moved[playermoved(Board,P1,P2)] = True
+						print('P1 Won!')
+						break
+					
+					print('P2\'s Turn:')
+					showBoard(Board)
+					P2moved[playermoved(Board,P2,P1)] = True
 
-						if wincheck(Board,P1,all(P1moved.values())):
-							showBoard(Board)
-							print('P1 Won!')
-							break
-						
-						print('P2\'s Turn:')
+					if wincheck(Board,P2,all(P2moved.values())):
 						showBoard(Board)
-						P2moved[playermoved(Board,P2,P1)] = True
+						print('P2 Won!')
+						break
+				break
 
-						if wincheck(Board,P2,all(P2moved.values())):
-							showBoard(Board)
-							print('P2 Won!')
-							break
-					break
+			elif not info['P1First']:
 
-				elif not info['P1First']:
+				while True:
 
-					while True:
+					print('P2\'s Turn:')
+					showBoard(Board)
+					P2moved[playermoved(Board,P2,P1)] = True
 
-						print('P2\'s Turn:')
+					if wincheck(Board,P2,all(P2moved.values())):
 						showBoard(Board)
-						P2moved[playermoved(Board,P2,P1)] = True
+						print('P2 Won!')
+						break
+					
+					print('P1\'s Turn:')
+					showBoard(Board)
+					P1moved[playermoved(Board,P1,P2)] = True
 
-						if wincheck(Board,P2,all(P2moved.values())):
-							showBoard(Board)
-							print('P2 Won!')
-							break
-						
-						print('P1\'s Turn:')
+					if wincheck(Board,P1,all(P1moved.values())):
 						showBoard(Board)
-						P1moved[playermoved(Board,P1,P2)] = True
+						print('P1 Won!')
+						break
+				break
 
-						if wincheck(Board,P1,all(P1moved.values())):
-							showBoard(Board)
-							print('P1 Won!')
-							break
-					break
+		elif not info['Multiplayer']:
 
-			elif not info['Multiplayer']:
+			P1moved = {7:False,8:False,9:False}
+			P2moved = {1:False,2:False,3:False}
 
-				P1 = info['P1']
-				P2 = info['Computer']
-				P1moved = {7:False,8:False,9:False}
-				P2moved = {1:False,2:False,3:False}
+			print()
+			print('Computer\'s piece is "{}"'.format(comp))
 
-				print()
-				print('Computer\'s piece is "v"')
+			if info['P1First']:
 
-				if info['P1First']:
-
-					while True:
-						
+				while True:
+					
+					showBoard(Board)
+					P1moved[playermoved(Board,P1,comp)] = True
+					
+					if wincheck(Board,P1,all(P1moved.values())):
 						showBoard(Board)
-						P1moved[playermoved(Board,P1,P2)] = True
-						
-						if wincheck(Board,P1,all(P1moved.values())):
-							showBoard(Board)
-							print('P1 Won!')
-							break
+						print('P1 Won!')
+						break
 
-						P2moved[compumoved(Board,P2,P1)] = True
-						
-						if wincheck(Board,P2,all(P2moved.values())):
-							showBoard(Board)
-							print('You lost to Ultron!')
-							break
-					break
-				
-				elif not info['P1First']:
-
-					while True:
-
-						P2moved[compumoved(Board,P2,P1)] = True
-						
-						if wincheck(Board,P2,all(P2moved.values())):
-							showBoard(Board)
-							print('You lost to Ultron!')
-							break
-						
+					P2moved[compumoved(Board,comp,P1)] = True
+					
+					if wincheck(Board,comp,all(P2moved.values())):
 						showBoard(Board)
-						P1moved[playermoved(Board,P1,P2)] = True
-						
-						if wincheck(Board,P1,all(P1moved.values())):
-							showBoard(Board)
-							print('P1 Won!')
-							break
-					break
-
-		# any error will be from user input (for now)
-		except Exception as a:
-
-			# To allow a ctrl+c exit
-			if a == KeyboardInterrupt:
+						print('You lost to Ultron!')
+						break
 				break
 			
-			else:
-				print('your input was invalid')
-				sleep(2)
+			elif not info['P1First']:
+
+				while True:
+
+					P2moved[compumoved(Board,comp,P1)] = True
+					
+					if wincheck(Board,comp,all(P2moved.values())):
+						showBoard(Board)
+						print('You lost to Ultron!')
+						break
+					
+					showBoard(Board)
+					P1moved[playermoved(Board,P1,comp)] = True
+					
+					if wincheck(Board,P1,all(P1moved.values())):
+						showBoard(Board)
+						print('P1 Won!')
+						break
+				break
+

@@ -1,10 +1,11 @@
 # mainframe by Hazem Elmasry 1710653
 
-import Siga
+import Siga as Siga
 import TicTacToe as Tic
 import RocketCollider as Rocket
 from time import sleep
 
+# Globals:
 Y = {'Y', 'y', 'yes', 'Yes', 'YES'}
 N = {'N', 'n', 'no', 'No', 'NO'}
 
@@ -19,6 +20,8 @@ print('We hope you enjoy your time playing!\n\n\n')
 
 Valid = True
 
+
+# Program runner
 while True:
 
 	answer = input('Do you want to play one of our three games? [Y/N]:  ')
