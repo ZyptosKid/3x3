@@ -218,7 +218,7 @@ def playermoved(Board,currentPMark,otherPMark):
 
 		try:
 
-			moveOrigin = int(input('Choose a square where you have one of your pieces:  '))
+			moveOrigin = int(input('Type in a square number where you have one of your pieces:  '))
 
 			if moveOrigin not in Board:
 
@@ -246,7 +246,7 @@ def playermoved(Board,currentPMark,otherPMark):
 
 		try:
 
-			moveDest = int(input('Choose a square where you want it to go:  '))
+			moveDest = int(input('Choose a square number where you want it to go:  '))
 
 			if moveDest not in Board:
 
