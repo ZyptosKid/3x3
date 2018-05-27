@@ -1,13 +1,11 @@
-# mainframe by Hazem Elmasry 1710653
+__author__="Hazem Elmasry @ZyptosKid"
 
 import Siga as Siga
 import TicTacToe as Tic
-import RocketCollider as Rocket
+import RocketCollider as Rc
 from time import sleep
 
-# Globals:
-Y = {'Y', 'y', 'yes', 'Yes', 'YES'}
-N = {'N', 'n', 'no', 'No', 'NO'}
+
 
 print('Welcome to our game!\n')
 
@@ -18,13 +16,16 @@ print('One of the games is the famous tic tac toe (By Adham 1710056), \nthe seco
 
 print('We hope you enjoy your time playing!\n\n\n')
 
-Valid = True
 
+Y = {'Y', 'y', 'yes', 'Yes', 'YES'}
+N = {'N', 'n', 'no', 'No', 'NO', 'quit', 'QUIT', 'Quit'}
+
+Valid = True
 
 # Program runner
 while True:
 
-	answer = input('Do you want to play one of our three games? [Y/N]:  ')
+	answer = input('Do you want to play one of our three games? [Y/ N=quit]:  ')
 
 	while Valid:
 
@@ -42,7 +43,8 @@ while True:
 			print('Choose a number from the following list:\n')
 			print('		[1] Tic Tac Toe')
 			print('		[2] Siga')
-			print('		[3] Rocket Collider\n\n')
+			print('		[3] Rocket Collider')
+			print('		[*] Any other choice = leave to main\n\n')
 
 			answer = input('- I want to play:  ')
 
@@ -57,12 +59,12 @@ while True:
 			elif answer == '2' or answer.lower() in answerOptions[2]:
 				Siga.runGame()
 			elif answer == '3' or answer.lower() in answerOptions[3]:
-				Rocket.runGame()
+				Rc.runGame()
 			else:
 				Valid = False
 				break		
 			
-			answer = input('Wanna play again? [Y/N]:  ')
+			answer = input('Wanna play again? [Y/ N=quit]:  ')
 
 			if answer in Y:
 				print()
@@ -80,5 +82,5 @@ while True:
 			Valid = False
 
 	if not Valid: 	
-		print ('That\'s not a valid answer!\n')
+		print ('Undecided. Returning to main...\n')
 		Valid = True
