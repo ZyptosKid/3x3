@@ -308,6 +308,29 @@ def playermoved(Board,currentPMark,otherPMark):
 
 
 def compumoved(Board,currentPMark,otherPMark):
+	
+	### AI ALGORITHM ###
+	# all must move first
+		# make a set of all the possible move dests and origins combinations as lists and pass them through all the forbidden movements as sets, popping/deleting any match
+		# make another list of all the move origins that are still False [list(dict.keys(False))?] (from runGame) [another param needed]
+		# you end up with a set of all the possible movement lists [origin,dist] and another of unmoved origins
+		# copy the possibilities set for a fallback into random choice in case all moved
+		# loop through the movement lists set with index[0] aka origin and see if it's in unmoved origins
+		# again if yes pass if no pop/delete that list
+		# no choice available:
+			# check for winning moves
+		# one choice or more:
+			# randomChoice it
+		
+	# check for winning moves
+		# get the filtered set of lists from above
+		# loop every set item (as set) on winning moves and see if the len of your intersection is 2
+			# if yes difference the intersection with the win move to find the required dist
+				# if [origin,dist] in possible dists, keep it, else pass
+		# no choice available:
+			# fallback to regular random choice
+		# one choice or more:
+			# randomChoice it and win
 
 	'''
 	Processes the computer's movement and checks its validity specifically based on the Siga rules.
