@@ -1,4 +1,4 @@
-__author__ = "Hazem Elmasry"
+__author__ = "Hazem Elmasry @ZyptosKid"
 
 
 from random import choice as randomChoice
@@ -307,7 +307,7 @@ def playermoved(Board,currentPMark,otherPMark):
 	# The condition is checked on both wincheck() and runGame()
 
 
-def compumoved(Board,currentPMark,otherPMark):
+def compumoved(Board,currentPMark,otherPMark,allmoved):
 	
 	### AI ALGORITHM ###
 	# all must move first
@@ -330,7 +330,7 @@ def compumoved(Board,currentPMark,otherPMark):
 		# no choice available:
 			# fallback to regular random choice
 		# one choice or more:
-			# randomChoice it and win
+			# randomChoice it vs filtered for 67/33 chance to win/pass
 
 	'''
 	Processes the computer's movement and checks its validity specifically based on the Siga rules.
@@ -347,6 +347,7 @@ def compumoved(Board,currentPMark,otherPMark):
 	moveOrigins = [] # all the possible move origins (computer's pieces placement on Board)
 	moveDests = [] # all the possible free destinations
 
+
 	# get a list of all the possible piece choices (3 choices only) and all the possible destination choices (3 choices only) proior to choosing
 	# to reduce the number of random choices that could go wrong ( from 9 choices on board twice to three choices twice), and for condition checking
 
@@ -357,6 +358,7 @@ def compumoved(Board,currentPMark,otherPMark):
 			moveOrigins.append(square) # Make it a possible origin
 		else:
 			pass
+
 
 	corners = [
 		{1,9},
@@ -384,28 +386,78 @@ def compumoved(Board,currentPMark,otherPMark):
 		{6,7}
 	]
 
-	# loop only exits when all game movement rules are satisfied by the computer's random choice
-	while True:
-	
-		moveOrigin = randomChoice(moveOrigins)
-		moveDest = randomChoice(moveDests)
+	win = [
+		{1,2,3},
+		{4,5,6},
+		{7,8,9},
+		{1,4,7},
+		{2,5,8},
+		{3,6,9},
+		{1,5,9},
+		{3,5,7}
+	]
 
-		cornerJumps = {moveOrigin,moveDest} in corners
-		normalJumps = {moveOrigin,moveDest} in jumps
-		ambitious = {moveOrigin,moveDest} in ambition
+	AIlist = []
+	for origin in moveOrigins:
+		for destination in moveDests:
 
-		if ambitious:
-			continue
+			cornerJumps = {origin,destination} in corners
+			normalJumps = {origin,destination} in jumps
+			ambitious = {origin,destination} in ambition
+			
+			if ambitious:
+				continue
 
-		elif (normalJumps or cornerJumps) and Board[(moveDest + moveOrigin)/2] == otherPMark:
-			continue
+			elif (normalJumps or cornerJumps) and Board[(origin+destination)/2] == otherPMark:
+				continue
 
-		else:
-			Board[moveDest] = currentPMark
-			Board[moveOrigin] = " "
-			break
+			else:
+				AIlist.append([origin,destination])
 
-	del(corners,jumps,ambition)
+
+	if all(allmoved.values()):
+
+		options = AIlist
+
+
+	else:
+
+		unmovedset = set()
+		for origin in allmoved:
+			if allmoved[origin] == False:
+				unmovedset.add(origin)
+
+		options = []
+		for option in AIlist:
+			if option[0] in unmovedset:
+				options.append(option)
+
+
+	winoptions = []
+
+	for winset in win:
+
+		if len(set(moveOrigins).intersection(winset)) == 2:
+
+			for option in options:
+				if option[1] == winset.difference(set(moveOrigins)).pop() and option[0] not in winset:
+					winoptions.append(option)
+
+
+
+	movechoice = randomChoice([1,2,3])
+	if movechoice%3 != 0 and winoptions:
+		winmove = randomChoice(winoptions)
+		[moveOrigin,moveDest] = winmove
+		Board[moveOrigin] = ' '
+		Board[moveDest] = currentPMark
+	else:
+		move = randomChoice(options)
+		[moveOrigin,moveDest] = move
+		Board[moveOrigin] = ' '
+		Board[moveDest] = currentPMark
+
+
 	return moveOrigin
 
 
