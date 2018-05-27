@@ -6,7 +6,7 @@ from Siga import showBoard
 slots = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
 # demo list to show the user how to use the board.
 demo = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-# player 1 chooses between single or multi ##---- This comment seems out of place
+# player 1 chooses between single or multi ##---- This comment seems out of place.. is it supposed to be here?
 
 
 def help():
@@ -139,7 +139,7 @@ def checkwin(symb):
     status = True ## what's this
 
     possible = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6],
-                [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]] ## what's this?
+                [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]] ## what's this? (ex. A list of possible win combinations)
 
     for item in possible:
         emp_lst = []
@@ -158,9 +158,9 @@ def checkwin(symb):
 
 def Gene_checkwin():
     '''Checks if either of players has won.'''
-    status = False ## why's this false here but true there?
+    status = False ## why's this false here but true up there? explain
 
-    ## no need to re-document those again
+    ## no need to re-document those again just remove this comment lol
     possible = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6],
                 [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
 
