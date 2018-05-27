@@ -64,22 +64,23 @@ def initialize():
 	
 		while True:
 			multi = yesno( inp = input('Multiplayer? [Y/N/RESET]:  ')) # def yesno is on line 94
-			if any(multi) or multi == 'RESET':
+			if any(multi):
 				print('Alright, got that.\n')
+				if multi[1] == 'R':
+					continue
 				break # pass on to P1First call loop. multi input should be correct.
 			else:
 				continue
-		if multi == 'RESET':
-			continue
 
 		while True:
 			P1First = yesno( inp = input('P1, wanna go first? [Y/N/RESET]:  '))
-			if any(P1First) or P1First == 'RESET':
+			if any(P1First):
 				print('Alright, got that.\n')
-				break # Both inputs are correct, loop breaks.
+				break # Both inputs are correct (or reset), loop breaks.
 			else:
 				continue
-		if P1First == 'RESET':
+				
+		if P1First[1] == 'R':
 			continue
 		break
 
@@ -103,7 +104,10 @@ def yesno(inp):
 
 	global Y, N # Gets the Y and N sets from globals
 
-	if inp in Y.union(N): # if the answer is valid
+	if inp == 'reset' or inp == 'r' or inp == 'RESET' or inp == 'R': # reset signal
+		return True,'R'
+
+	elif inp in Y.union(N): # if the answer is valid
 
 		if inp in Y:
 			inp = True
@@ -209,6 +213,9 @@ def playermoved(Board,currentPMark,otherPMark):
 		{6,7}
 	]
 
+	# return command variations set
+	Return = {'Return','return','RETURN','r','R'}
+
 	# I used to try a mathematical approach instead of a possible combinations approach, but it was never consistent across all possible movements. For example: moving from square 4 to square 3 should mathematically mean a 1-block movement, but it actually is an out-of-range movement.
 
 	# This loop is for RESET fallbacks
@@ -248,9 +255,9 @@ def playermoved(Board,currentPMark,otherPMark):
 
 			try:
 
-				moveDest = input('Choose a slot number where you want it to go [or RETURN]:  ')
+				moveDest = input('Choose a slot number where you want it to go [or R = RETURN]:  ')
 				
-				if moveDest == 'RETURN':
+				if moveDest in Return:
 					break # get out of this loop, continue the mother loop
 					
 				moveDest = int(moveDest)
@@ -298,7 +305,7 @@ def playermoved(Board,currentPMark,otherPMark):
 					print('your input was invalid')
 					continue
 		
-		if moveDest == 'RETURN':
+		if moveDest in Return:
 			continue
 		break
 
@@ -447,13 +454,21 @@ def compumoved(Board,currentPMark,otherPMark,allmoved):
 
 
 	movechoice = randomChoice([1,2,3])
-	if movechoice%3 != 0 and winoptions:
+	winmoving = bool((movechoice%3 != 0) and winoptions)
+	notTrapped = bool(options)
+
+	if winmoving:
 		winmove = randomChoice(winoptions)
 		[moveOrigin,moveDest] = winmove
 		Board[moveOrigin] = ' '
 		Board[moveDest] = currentPMark
-	else:
+	elif notTrapped:
 		move = randomChoice(options)
+		[moveOrigin,moveDest] = move
+		Board[moveOrigin] = ' '
+		Board[moveDest] = currentPMark
+	else:
+		move = randomChoice(AIlist)
 		[moveOrigin,moveDest] = move
 		Board[moveOrigin] = ' '
 		Board[moveDest] = currentPMark
@@ -598,7 +613,7 @@ def runGame():
 				while True:
 
 					compmoved[compumoved(Board,comp,P1,compmoved)] = True
-					
+
 					if wincheck(Board,comp,all(compmoved.values())):
 						showBoard(Board)
 						print('You lost to Ultron!')

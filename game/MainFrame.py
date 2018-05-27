@@ -4,6 +4,7 @@ import Siga as Siga
 import TicTacToe as Tic
 import RocketCollider as Rc
 from time import sleep
+from os import path, chdir
 
 
 
@@ -16,25 +17,26 @@ print('One of the games is the famous tic tac toe (By Adham 1710056), \nthe seco
 
 print('We hope you enjoy your time playing!\n\n\n')
 
+# Options to choose from later on, static variables
+Y = {'Y', 'y', 'yes', 'Yes', 'YES','yES'}
+N = {'N', 'n', 'no', 'No', 'NO', 'nO'}
+Q = {'Q', 'q', 'quit', 'Quit', 'QUIT', 'qUIT'}
+Valid = True # Checker for the validity of answer, makes sure the loop continues on invalid answer
 
-Y = {'Y', 'y', 'yes', 'Yes', 'YES'}
-N = {'N', 'n', 'no', 'No', 'NO', 'quit', 'QUIT', 'Quit'}
-
-Valid = True
-
-# Program runner
+# The Program Runner loop, only useful when answer is undecided. Falls back to the first input.
 while True:
 
 	answer = input('Do you want to play one of our three games? [Y/ N=quit]:  ')
 
+	# The loop the program spends most of its runtime on
 	while Valid:
 
-		if answer in N:
+		if answer in N or answer in Q:
 
-			sleep(1)
 			print('See you!')
-
+			sleep(1)
 			quit()
+
 
 		elif answer in Y:
 
@@ -47,40 +49,60 @@ while True:
 			print('		[*] Any other choice = leave to main\n\n')
 
 			answer = input('- I want to play:  ')
+			answer = answer.lower()
 
+			# Dict for most of the possible game name choices/typos
 			answerOptions = {
-				1:{'tic tac toe','tictactoe','tictac toe','tic tactoe'},
-				2:{'siga','seega','sega'},
-				3:{'rocket collider','rocketcollider','roket colider','rocket colider','roket collider'}
+				'Tic':{'1','tic tac toe','tictactoe','tictac toe','tic tactoe'},
+				'Siga':{'2','siga','seega','sega'},
+				'Rc':{'3','rocket collider','rocketcollider','roket colider','rocket colider','roket collider'}
 			}
 
-			if answer == '1' or answer.lower() in answerOptions[1]:
+
+			if answer in answerOptions['Tic']:
 				Tic.runGame()
-			elif answer == '2' or answer.lower() in answerOptions[2]:
+			
+			elif answer in answerOptions['Siga']:
 				Siga.runGame()
-			elif answer == '3' or answer.lower() in answerOptions[3]:
+			
+			elif answer in answerOptions['Rc']:
 				Rc.runGame()
+
 			else:
-				Valid = False
+				chdir(path.dirname(__file__)) # make sure you're on the correct directory
+				
+				with open('answerlogs.txt','a') as logs: # open your log file once 
+					logs.write("- "+answer+"\n") # write the answer for future typo reference
+				
+				Valid = False # invalidate the answer to exit the loop "while Valid"
 				break		
 			
-			answer = input('Wanna play again? [Y/ N=quit]:  ')
+
+			answer = input('Wanna play another game? [Y/ N=leave to main / Q=quit]:  ')
 
 			if answer in Y:
 				print()
 				print('Alright! Another round!')
 				continue
+
 			elif answer in N:
 				print()
-				print('Hope you enjoyed!')
+				print('Alright, returning to main...')
 				break
+
+			elif answer in Q:
+				print()
+				print('Hope you enjoyed!')
+				quit()
+
 			else:
 				Valid = False
 				break
 		
-		else:
+
+		else: # an else for the case if the very first input was invalid
 			Valid = False
 
-	if not Valid: 	
+	if not Valid: # general fallback for all the invalid answers inside the "while Valid" loop 	
 		print ('Undecided. Returning to main...\n')
 		Valid = True

@@ -131,15 +131,15 @@
 from random import choice as randomChoice
 
 Board = {
-	1:1 , 2:0 , 3:1 ,
-	4:1 , 5:0 , 6:2 ,
-	7:0 , 8:2 , 9:2
+	1:1 , 2:2 , 3:1 ,
+	4:1 , 5:2 , 6:2 ,
+	7:0 , 8:0 , 9:0
 }
 
 currentPMark = 1
 otherPMark = 2
 
-allmoved = {1:True, 2:True, 3:True}
+allmoved = {1:True, 2:True, 3:False}
 
 def compumoved(Board,currentPMark,otherPMark,allmoved):
 	
@@ -285,8 +285,13 @@ def compumoved(Board,currentPMark,otherPMark,allmoved):
 		[moveOrigin,moveDest] = winmove
 		Board[moveOrigin] = 0
 		Board[moveDest] = currentPMark
-	else:
+	elif options:
 		move = randomChoice(options)
+		[moveOrigin,moveDest] = move
+		Board[moveOrigin] = 0
+		Board[moveDest] = currentPMark
+	else:
+		move = randomChoice(AIlist)
 		[moveOrigin,moveDest] = move
 		Board[moveOrigin] = 0
 		Board[moveDest] = currentPMark
