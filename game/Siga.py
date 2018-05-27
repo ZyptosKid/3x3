@@ -2,14 +2,15 @@ __author__ = "Hazem Elmasry"
 
 
 from random import choice as randomChoice
-from time import sleep
 
 
 
-# Globals:
+# Globals: (used multiple times across different functions)
+# sets of possible y/n answers:
 Y = {'Y', 'y', 'yes', 'Yes', 'YES'}
 N = {'N', 'n', 'no', 'No', 'NO'}
 
+# the mark of each player as will show on board:
 P1 = '^'
 P2 = comp = 'v'
 
@@ -56,33 +57,54 @@ def initialize():
 	THIS FUNCTION CONTAINS INPUT PROMPTS
 
 	'''
-
+	
+	# This loop makes sure the user input is correct and understood by the rest of the code
+	# The loop won't exit until both multiplayer() and whoFirst() have returned tuples with AT LEAST one True value
 	while True:
-
-		multi = multiplayer(multi = input('Multiplayer? [Y/N]:  '))
-		if any(multi):
-			pass
-		else:
+	
+		while True:
+			multi = yesno( inp = input('Multiplayer? [Y/N/RESET]:  ')) # def multiplayer is on line 94
+			if any(multi) or multi == 'RESET':
+				print('Alright, got that.\n')
+				break # pass on to whoFirst call loop. multiplayer input should be correct.
+			else:
+				continue
+		if multi == 'RESET':
 			continue
 
-		P1First = whoFirst(P1First = input('P1, wanna go first? [Y/N]:  '))
-		if any(P1First):
-			break
-		else:
+		while True:
+			P1First = yesno( inp = input('P1, wanna go first? [Y/N/RESET]:  '))
+			if any(P1First) or multi == 'RESET':
+				print('Alright, got that.\n')
+				break # Both inputs are correct, loop breaks.
+			else:
+				continue
+		if P1First == 'RESET':
 			continue
+		break
 
 
 	return {
 		'Multiplayer':multi[1],
 		'P1First':P1First[1],
 		}
+		# The function's output is Tuple type. Index [0] is predefined to assure that input is correct, while index [1] represents user's choice
 
 
-def multiplayer(multi):
+def yesno(inp):
+	'''
+	Decides the mode of the game based on its only parameter.
+	Usually the parameter is an input function that prompts the user to answer a simple yes no question.
+	
+	Returns a tuple that has two items. 
+		First item is True if user input was correct, False (along with the second item) otherwise.
+		Second item is true if the player answers Yes, False if No
+	
+	'''
 
-	global Y, N
+	global Y, N # Gets the Y and N sets from globals
 
-	if multi in Y.union(N):
+	if multi in Y.union(N): # if the answer is valid
 
 		if multi in Y:
 			multi = True
@@ -91,31 +113,11 @@ def multiplayer(multi):
 
 		return True,multi
 
-	else:
+	else: # answer is neither Yes nor No
 
 		print('this isn\'t a correct choice!')
 
 		return False,False
-
-
-def whoFirst(P1First):
-
-	global Y, N
-
-	if P1First in Y.union(N):
-
-		if P1First in Y:
-			P1First = True
-		else:
-			P1First = False
-
-		return True,P1First
-
-	else:
-
-		print('this isn\'t a correct choice!')
-		
-		return False
 
 
 def showBoard(Board,Labels=True):
@@ -128,23 +130,25 @@ def showBoard(Board,Labels=True):
 		Labels = default True (bool) : either shows slot label or hides it
 
 	examples:
+	
+		Board = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' ]
 
 		Labels = True:
 			[1] | [2] | [3]
-			 1  |  2  |  3
+			 a  |  b  |  c
 		   -----------------
 			[4] | [5] | [6]
-			 4  |  5  |  6
+			 d  |  e  |  f
 		   -----------------
 			[7] | [8] | [9]
-			 7  |  8  |  9
+			 g  |  h  |  i
 
 		Labels = False:
-			 1  |  2  |  3
+			 a  |  b  |  c
 		   -----------------
-			 4  |  5  |  6
+			 d  |  e  |  f
 		   -----------------
-			 7  |  8  |  9
+			 g  |  h  |  i
 
 	This function is reusable for all linear iterables. Import it, no problems.
 
@@ -206,91 +210,96 @@ def playermoved(Board,currentPMark,otherPMark):
 
 	# I used to try a mathematical approach instead off possible combinations approach but it was never consistent across all possible movements. For example: moving from square 4 to square 3 should mathematically mean a 1-block movement, but it actually is an out-of-range movement.
 
-	# error dict
-	# error action dict
-	# for error in error dict:
-	# if errordict[error]: 
-	# 	exec(erroractiondict[error]) and return False 
-
-
-
+	# This loop is for RESET fallbacks
 	while True:
-
-		try:
-
-			moveOrigin = int(input('Type in a square number where you have one of your pieces:  '))
-
-			if moveOrigin not in Board:
-
-				print('you chose something that isn\'t on the Board to begin with.')
-				continue
-
-			elif Board[moveOrigin] != currentPMark:
-
-				print('please choose one of your pieces')
-				continue
-
-			break
 		
-		except Exception as a:
+		# This loop won't exit until move origin is a valid choice
+		while True:
 
-			# To allow a ctrl+c exit
-			if a == KeyboardInterrupt:
+			try:
+
+				moveOrigin = int(input('Type in a slot number where you have one of your pieces:  '))
+
+				if moveOrigin not in Board:
+
+					print('you chose something that isn\'t on the Board to begin with.')
+					continue
+
+				elif Board[moveOrigin] != currentPMark:
+
+					print('please choose one of your pieces')
+					continue
+
 				break
-			
-			else:
-				print('your input was invalid')
-				continue
 
-	while True:
+			except Exception as a: # usually an error with the int() casting or a keyboard interrupt (ctrl+c)
 
-		try:
+				# To allow a ctrl+c exit
+				if a == KeyboardInterrupt:
+					break
 
-			moveDest = int(input('Choose a square number where you want it to go:  '))
+				else:
+					print('your input was invalid')
+					continue
 
-			if moveDest not in Board:
+		# This loop won't exit until move destination is a valid choice and all game movement rules are satisfied (or user returns to the previous loop)
+		while True:
 
-				print('you chose something that isn\'t on the Board to begin with.')
-				continue
+			try:
 
-			elif Board[moveDest] != " ":
+				moveDest = input('Choose a slot number where you want it to go [or RETURN]:  ')
 				
-				print('you can\'t move there!')
-				continue
+				if moveDest == 'RETURN':
+					break # get out of this loop, continue the mother loop
+					
+				moveDest = int(moveDest)
+
+				if moveDest not in Board:
+
+					print('you chose something that isn\'t on the Board to begin with.')
+					continue
+
+				elif Board[moveDest] != " ":
+
+					print('you can\'t move there!')
+					continue
+
+				cornerJumps = {moveOrigin,moveDest} in corners
+				normalJumps = {moveOrigin,moveDest} in jumps
+				ambitious = {moveOrigin,moveDest} in ambition
 
 
-			cornerJumps = {moveOrigin,moveDest} in corners
-			normalJumps = {moveOrigin,moveDest} in jumps
-			ambitious = {moveOrigin,moveDest} in ambition
+				if ambitious:
 
+					print('can\'t move this far!')
+					continue
 
-			if ambitious:
+				elif (normalJumps or cornerJumps) and Board[(moveDest + moveOrigin)/2] == otherPMark: # If there is a jump, and the slot in between has a player's piece on it; a forbidden move in Siga.
 
-				print('can\'t move this far!')
-				continue
+					print('can\'t jump over the other player\'s piece!')
+					continue
 
-			elif (normalJumps or cornerJumps) and Board[(moveDest + moveOrigin)/2] == otherPMark:
+				else:
 
-				print('can\'t jump over the other player\'s piece!')
-				continue
+					# if there was no problem with the player choices
+					Board[moveDest] = currentPMark
+					Board[moveOrigin] = " "
+					# one successful move done
+					break
 
-			else:
-
-				# if there was no problem with the player choices
-				Board[moveDest] = currentPMark
-				Board[moveOrigin] = " "
-				# one successful move done
-				break
-
-		except Exception as a:
-
-			# To allow a ctrl+c exit
-			if a == KeyboardInterrupt:
-				break
+			except Exception as a:
+			# reason why I have one exception block of those for each loop is because I don't want an error to repeat the whole procedure, but rather continue with the current input prompt.
 			
-			else:
-				print('your input was invalid')
-				continue
+				if a == KeyboardInterrupt:
+					break
+
+				else:
+					print('your input was invalid')
+					continue
+		
+		if moveDest == 'RETURN':
+			continue
+		break
 
 
 	del(corners,jumps,ambition) # no need to keep those around
@@ -312,17 +321,17 @@ def compumoved(Board,currentPMark,otherPMark):
 	returns the movement origin of the player for using it to check if all the player's pieces moved or not
 	'''
 
-	moveOrigins = []
-	moveDests = []
+	moveOrigins = [] # all the possible move origins (computer's pieces placement on Board)
+	moveDests = [] # all the possible free destinations
 
 	# get a list of all the possible piece choices (3 choices only) and all the possible destination choices (3 choices only) proior to choosing
-	# to reduce the number of random choices (9 choices on board) and condition checking
+	# to reduce the number of random choices that could go wrong ( from 9 choices on board twice to three choices twice), and for condition checking
 
 	for square in Board:
-		if Board[square] == ' ':
-			moveDests.append(square)
-		elif Board[square] == currentPMark:
-			moveOrigins.append(square)
+		if Board[square] == ' ': # If the square is empty
+			moveDests.append(square) # Make it a possible destination
+		elif Board[square] == currentPMark: # else if the square has a piece that belongs to computer
+			moveOrigins.append(square) # Make it a possible origin
 		else:
 			pass
 
@@ -352,6 +361,7 @@ def compumoved(Board,currentPMark,otherPMark):
 		{6,7}
 	]
 
+	# loop only exits when all game movement rules are satisfied by the computer's random choice
 	while True:
 	
 		moveOrigin = randomChoice(moveOrigins)
@@ -393,15 +403,16 @@ def wincheck(Board,player,allmoved=False):
 	win = [{1,2,3},{4,5,6},{7,8,9},{1,4,7},{2,5,8},{3,6,9},{1,5,9},{3,5,7}]
 	
 	# this set is later compared to the win cases to see if it's part of that list
-	P = set()
+	PlayerComb = set()
 
+	# looping on the board squares and looking for the player pieces' position to add to the set
 	for square in Board:
 		if Board[square] == player:
-			P.add(square)
+			PlayerComb.add(square)
 
-	if allmoved:
+	if allmoved: # If all the player-in-question's pieces moved, check if he won. Because you have to move all your pieces in Siga before a line of pieces is considered a win.
 
-		if P in win:
+		if PlayerComb in win: # if P is a winning combination
 			return True
 
 	else:
@@ -415,7 +426,7 @@ def runGame():
 
 	help()
 
-	info = initialize()
+	info = initialize() # info is a dict
 	global Board, P1, P2, comp, Y, N
 
 	while True:		
@@ -436,9 +447,9 @@ def runGame():
 
 					print('P1\'s Turn:')
 					showBoard(Board)
-					P1moved[playermoved(Board,P1,P2)] = True
+					P1moved[playermoved(Board,P1,P2)] = True # playermoved returns the move origin which is used here to say that the original piece's place has been abandoned at least once, even if it's filled again.
 
-					if wincheck(Board,P1,all(P1moved.values())):
+					if wincheck(Board,P1,all(P1moved.values())): # all(P1moved.values()) means that all the pieces have at least moved once, if so the value would be True.
 						showBoard(Board)
 						print('P1 Won!')
 						break
@@ -453,6 +464,8 @@ def runGame():
 						break
 				break
 
+			# Those are repititions of the above block of code with different conditions, function calls, and order. No new syntax..
+			
 			elif not info['P1First']:
 
 				while True:
@@ -479,7 +492,7 @@ def runGame():
 		elif not info['Multiplayer']:
 
 			P1moved = {7:False,8:False,9:False}
-			P2moved = {1:False,2:False,3:False}
+			compmoved = {1:False,2:False,3:False}
 
 			print()
 			print('Computer\'s piece is "{}"'.format(comp))
@@ -496,9 +509,9 @@ def runGame():
 						print('P1 Won!')
 						break
 
-					P2moved[compumoved(Board,comp,P1)] = True
+					compmoved[compumoved(Board,comp,P1)] = True
 					
-					if wincheck(Board,comp,all(P2moved.values())):
+					if wincheck(Board,comp,all(compmoved.values())):
 						showBoard(Board)
 						print('You lost to Ultron!')
 						break
@@ -508,9 +521,9 @@ def runGame():
 
 				while True:
 
-					P2moved[compumoved(Board,comp,P1)] = True
+					compmoved[compumoved(Board,comp,P1)] = True
 					
-					if wincheck(Board,comp,all(P2moved.values())):
+					if wincheck(Board,comp,all(compmoved.values())):
 						showBoard(Board)
 						print('You lost to Ultron!')
 						break
