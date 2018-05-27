@@ -104,14 +104,14 @@ def yesno(inp):
 
 	global Y, N # Gets the Y and N sets from globals
 
-	if multi in Y.union(N): # if the answer is valid
+	if inp in Y.union(N): # if the answer is valid
 
-		if multi in Y:
-			multi = True
+		if inp in Y:
+			inp = True
 		else:
-			multi = False
+			inp = False
 
-		return True,multi
+		return True,inp
 
 	else: # answer is neither Yes nor No
 
