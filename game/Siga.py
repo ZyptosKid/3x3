@@ -59,14 +59,14 @@ def initialize():
 	'''
 	
 	# This loop makes sure the user input is correct and understood by the rest of the code
-	# The loop won't exit until both multiplayer() and whoFirst() have returned tuples with AT LEAST one True value
+	# The loop won't exit until both multi and P1First are tuples with AT LEAST one True value
 	while True:
 	
 		while True:
-			multi = yesno( inp = input('Multiplayer? [Y/N/RESET]:  ')) # def multiplayer is on line 94
+			multi = yesno( inp = input('Multiplayer? [Y/N/RESET]:  ')) # def yesno is on line 94
 			if any(multi) or multi == 'RESET':
 				print('Alright, got that.\n')
-				break # pass on to whoFirst call loop. multiplayer input should be correct.
+				break # pass on to P1First call loop. multi input should be correct.
 			else:
 				continue
 		if multi == 'RESET':
@@ -74,7 +74,7 @@ def initialize():
 
 		while True:
 			P1First = yesno( inp = input('P1, wanna go first? [Y/N/RESET]:  '))
-			if any(P1First) or multi == 'RESET':
+			if any(P1First) or P1First == 'RESET':
 				print('Alright, got that.\n')
 				break # Both inputs are correct, loop breaks.
 			else:
@@ -88,7 +88,6 @@ def initialize():
 		'Multiplayer':multi[1],
 		'P1First':P1First[1],
 		}
-		# The function's output is Tuple type. Index [0] is predefined to assure that input is correct, while index [1] represents user's choice
 
 
 def yesno(inp):
@@ -104,20 +103,22 @@ def yesno(inp):
 
 	global Y, N # Gets the Y and N sets from globals
 
-	if multi in Y.union(N): # if the answer is valid
+	if inp in Y.union(N): # if the answer is valid
 
-		if multi in Y:
-			multi = True
+		if inp in Y:
+			inp = True
 		else:
-			multi = False
+			inp = False
 
-		return True,multi
+		return True,inp
 
 	else: # answer is neither Yes nor No
 
 		print('this isn\'t a correct choice!')
 
 		return False,False
+
+	# The function's output is Tuple type. Index [0] is predefined to assure that input is correct, while index [1] represents user's choice
 
 
 def showBoard(Board,Labels=True):
@@ -208,7 +209,7 @@ def playermoved(Board,currentPMark,otherPMark):
 		{6,7}
 	]
 
-	# I used to try a mathematical approach instead off possible combinations approach but it was never consistent across all possible movements. For example: moving from square 4 to square 3 should mathematically mean a 1-block movement, but it actually is an out-of-range movement.
+	# I used to try a mathematical approach instead of a possible combinations approach but it was never consistent across all possible movements. For example: moving from square 4 to square 3 should mathematically mean a 1-block movement, but it actually is an out-of-range movement.
 
 	# This loop is for RESET fallbacks
 	while True:
@@ -487,7 +488,7 @@ def wincheck(Board,player,allmoved=False):
 
 	if allmoved: # If all the player-in-question's pieces moved, check if he won. Because you have to move all your pieces in Siga before a line of pieces is considered a win.
 
-		if PlayerComb in win: # if P is a winning combination
+		if PlayerComb in win: # if PlayerComb is a winning combination
 			return True
 
 	else:
@@ -584,7 +585,7 @@ def runGame():
 						print('P1 Won!')
 						break
 
-					compmoved[compumoved(Board,comp,P1)] = True
+					compmoved[compumoved(Board,comp,P1,compmoved)] = True
 					
 					if wincheck(Board,comp,all(compmoved.values())):
 						showBoard(Board)
@@ -596,7 +597,7 @@ def runGame():
 
 				while True:
 
-					compmoved[compumoved(Board,comp,P1)] = True
+					compmoved[compumoved(Board,comp,P1,compmoved)] = True
 					
 					if wincheck(Board,comp,all(compmoved.values())):
 						showBoard(Board)
