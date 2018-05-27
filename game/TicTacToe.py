@@ -6,22 +6,33 @@ from Siga import showBoard
 slots = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
 # demo list to show the user how to use the board.
 demo = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-# player 1 chooses between single or multi
+# player 1 chooses between single or multi ##---- This comment seems out of place
 
 
 def help():
     '''prints game manual'''
     print('''hello! this is TicTacToe made by Adham and supervised by our team '3x3.'
 the concept is pretty simple, you choose whether you want to play with the computer or with your friend and based on turns
-each player will try to hit his/her letter (X or Z) horizontally, vertically, or diagonally in 3 slots.
+each player will try to hit his/her letter (X or O) horizontally, vertically, or diagonally in 3 slots.
 who ever claims three consecutive of his letter, Wins the game!
 ''')
 
+    
+### HAZEM ###
+
+# added a few notes and suggestions, please review them asap and commit directly here instead of in your fork
+# please delete this block when done
+# all my notes are perceded by a ##. use ctrl+f to find "##" easily.
+
+
+
+#############
 
 def SingleOrMulti():
-    '''multiplayer / single player checker'''
+    '''multiplayer / single player checker''' ## add the output type (ex. returns string that is either 'single' or 'multi')
 
     gametype = ''
+    ## brief loop mechanism description here
     while gametype == '':
         mode = input('are you alone? y for yes and n for no please.')
         if mode == 'y':
@@ -39,13 +50,14 @@ def SingleOrMulti():
 def shwBoard(board):
     '''function that prints the board using a list.'''
 
-    showBoard(board, Labels=False)
+    showBoard(board, Labels=False) ## using imported function is a plus, point it out with pride
 
 
 def whosfirst():
-    '''player1 chooses who goes first, whether P1 is playing W comp or P2   '''
+    '''player1 chooses who goes first, whether P1 is playing W comp or P2   ''' ## again specify the return here
 
     answertype = ''
+    ## brief loop description
     while answertype == '':
         answer = input(
             'Player 1, do you wanna go first? y for yes and n for no please.')
@@ -62,7 +74,7 @@ def whosfirst():
 
 
 def emptyspace(plyr_mve):
-    '''function that identifies blank spaces in the global list (slot)'''
+    '''function that identifies blank spaces in the global list (slot)''' ## "and returns boolean True/False"
 
     if slots[plyr_mve] == ' ':
         return True
@@ -73,13 +85,13 @@ def emptyspace(plyr_mve):
 def compmove():
     '''Function that chooses the comp move based on random choice built in function and stores it in (slots) list'''
 
-    state = bool
+    state = bool ## how does this work without ().. as in bool()... and why bool to begin with? why not False
     while state != True:
-        x = choice(list(range(8)))
+        x = choice(list(range(8))) # random choice from 0 to 8  ## use meaningful var names instead of x and y
         y = emptyspace(x)
         state = y
     if state == True:
-        slots[x] = 'Z'
+        slots[x] = 'O'
         shwBoard(slots)
 
 
@@ -90,10 +102,15 @@ def player1move(symb):
     while True:
         loc = input(
             "choose your move's place from 1-9 as stated in the board infront of you")
-        if loc.isnumeric():
+        if loc.isnumeric(): ## what do those conditions mean? Explain them in words
+            ## this condition below is hideous. Try a different approach
+            ## if type(eval(loc))==int and 0<eval(loc)<10:
+            ## or even better:
+            ## location = eval(loc)
+            ## if type(location... and so on
             if float(eval(loc)) == 1.0 or float(eval(loc)) == 2.0 or float(eval(loc)) == 3.0 or float(eval(loc)) == 4.0 or float(eval(loc)) == 5.0 or float(eval(loc)) == 6.0 or float(eval(loc)) == 7.0 or float(eval(loc)) == 8.0 or float(eval(loc)) == 9.0:
                 if emptyspace(eval(loc)-1) == True:
-                    slots[eval(loc)-1] = symb
+                    slots[eval(loc)-1] = symb ## give your values more descriptive names
                     shwBoard(slots)
 
                     break
@@ -105,7 +122,7 @@ def player1move(symb):
 
 
 def boardfull():
-    '''checks if the board is full and prints that game has ended.'''
+    '''checks if the board is full and prints that game has ended.''' ## returns ???
 
     marker = 0
     for i in slots:
@@ -118,22 +135,22 @@ def boardfull():
 
 
 def checkwin(symb):
-    '''checks if the designated player X or Z has won and returns the status'''
-    status = True
+    '''checks if the designated player X or O has won and returns the status'''
+    status = True ## what's this
 
     possible = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6],
-                [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
+                [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]] ## what's this?
 
     for item in possible:
         emp_lst = []
         for i in item:
-            emp_lst.append(slots[i])
-        if emp_lst[0] != ' ' and emp_lst[0] == emp_lst[1] and emp_lst[1] == emp_lst[2]:
+            emp_lst.append(slots[i]) ## what does this do?
+        if emp_lst[0] != ' ' and emp_lst[0] == emp_lst[1] and emp_lst[1] == emp_lst[2]: ## what does this condition mean?
             if emp_lst[0] == symb:
-                print('you won player using letter {}!'.format(symb))
+                print('player using letter {} won!'.format(symb))
                 status = True
 
-            else:
+            else: ## should this be here at all??????????????
                 print('experimental: you lost to the opposing opponent')
 
             return status
@@ -141,8 +158,9 @@ def checkwin(symb):
 
 def Gene_checkwin():
     '''Checks if either of players has won.'''
-    status = False
+    status = False ## why's this false here but true there?
 
+    ## no need to re-document those again
     possible = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6],
                 [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
 
@@ -157,12 +175,12 @@ def Gene_checkwin():
             status = False
 
         return status
-    else:
+    else: ## code after return will never execute. Get rid of this if the function worked fine with return above it
         status = False
         return status
 
 
-def gameon(func):
+def gameon(func): ## you never called this function in your code ever.. what's it for?
     '''used to check if game is still going on or not using function checkwin'''
     status = True
     if func == False:  # if checkwin is false
@@ -180,15 +198,16 @@ def runGame():
     if mode == 'multi':
         if whosfirst() == 'yes':  # if player chooses to go first
             while Gene_checkwin() == False:  # condition to keep the game going if false
+                
                 player1move('X')
                 if checkwin('X') == True:  # if player one "X" wins game breaks and player wins
                     break
                 else:
                     if boardfull() != True:  # player 2 plays
                         # if p1 move causes the game to move on without winning condition or draw, p2 plays
-                        if checkwin('Z') != True:
-                            player1move('Z')
-                            if checkwin('Z') == True:
+                        if checkwin('O') != True:
+                            player1move('O')
+                            if checkwin('O') == True:
                                 break
                             else:
                                 boardfull()
@@ -198,12 +217,12 @@ def runGame():
         else:  # if P2 is going to start first
             while Gene_checkwin() == False:
 
-                player1move('Z')
-                if checkwin('Z') == True:
+                player1move('O')
+                if checkwin('O') == True:
                     break
                 else:
                     if boardfull() != True:
-                        # if p1 move causes the game to move on without winning condition or draw, p2 plays
+                        # if p2 move causes the game to move on without winning condition or draw, p1 plays
                         if checkwin('X') != True:
                             player1move('X')
                             if checkwin('X') == True:
@@ -216,16 +235,16 @@ def runGame():
     if mode == 'single':  # if player chooses single with comp
         if whosfirst() == 'yes':
             while Gene_checkwin() == False:
-
+                
                 player1move('X')
                 if checkwin('X') == True:
                     break
                 else:
                     if boardfull() != True:
                         # if p1 move causes the game to move on without winning condition or draw, p2 plays
-                        if checkwin('Z') != True:
+                        if checkwin('O') != True:
                             compmove()
-                            if checkwin('Z') == True:
+                            if checkwin('O') == True:
                                 break
                             else:
                                 boardfull()
@@ -236,11 +255,11 @@ def runGame():
             while Gene_checkwin() == False:
 
                 compmove()
-                if checkwin('Z') == True:
+                if checkwin('O') == True:
                     break
                 else:
                     if boardfull() != True:
-                        # if p1 move causes the game to move on without winning condition or draw, p2 plays
+                        # if p2 move causes the game to move on without winning condition or draw, p1 plays
                         if checkwin('X') != True:
                             player1move('X')
                             if checkwin('X') == True:
