@@ -209,7 +209,7 @@ def playermoved(Board,currentPMark,otherPMark):
 		{6,7}
 	]
 
-	# I used to try a mathematical approach instead of a possible combinations approach but it was never consistent across all possible movements. For example: moving from square 4 to square 3 should mathematically mean a 1-block movement, but it actually is an out-of-range movement.
+	# I used to try a mathematical approach instead of a possible combinations approach, but it was never consistent across all possible movements. For example: moving from square 4 to square 3 should mathematically mean a 1-block movement, but it actually is an out-of-range movement.
 
 	# This loop is for RESET fallbacks
 	while True:
