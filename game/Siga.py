@@ -7,20 +7,16 @@ from random import choice as randomChoice
 
 # Globals: (used multiple times across different functions)
 # sets of possible y/n answers:
-Y = {'Y', 'y', 'yes', 'Yes', 'YES'}
-N = {'N', 'n', 'no', 'No', 'NO'}
+Y = {'Y', 'y', 'yes', 'Yes', 'YES', 'yES'}
+N = {'N', 'n', 'no', 'No', 'NO', 'nO'}
+Q = {'Q', 'q', 'quit', 'Quit', 'QUIT', 'qUIT'}
+R = {'R', 'r', 'reset', 'Reset', 'RESET', 'rESET'}.union(
+	{'return', 'Return', 'RETURN', 'rETURN'}
+)
 
 # the mark of each player as will show on board:
 P1 = '^'
 P2 = comp = 'v'
-
-# initialized board
-Board = {
-	1:P2 , 2:P2 , 3:P2 ,
-	4:" ", 5:" ", 6:" ",
-	7:P1 , 8:P1 , 9:P1 ,
-}
-
 
 def help():
 
@@ -35,11 +31,16 @@ def help():
 
 	How to play:
 
-		Two players place three pieces on a 3x3 grid and move one piece at a time each turn.
+	1-	Two players place three pieces on a 3x3 grid 
+		and move one piece at a time each turn.
 
-		The goal is to get your three pieces in a row
+	2-	The goal is to get your three pieces in a row
 
-		You're allowed to move to the square next to you or the square after it, Horizontally, Vertically, or Diagonally.
+	3-	You're allowed to move to:
+		-	the square next to you 
+		-	or the square after it 
+		Either Horizontally, Vertically, or Diagonally.
+		
 		But you're not allowed to jump over the other player's piece.\n\n\n
 		
 	Good luck!\n\n\n''')
@@ -51,6 +52,7 @@ def initialize():
 
 	Returns a dictionary as follows:
 
+		'Board':		(dict)  The game board initialized
 		'Multiplayer': 	(bool) 	Multiplayer T/F depending on user input,
 		'P1First': 		(bool) 	Player 1 goes first T/F depending on user input
 
@@ -63,18 +65,31 @@ def initialize():
 	while True:
 	
 		while True:
-			multi = yesno( inp = input('Multiplayer? [Y/N/RESET]:  ')) # def yesno is on line 94
+			multi = yesno( inp = input('Multiplayer? [Y/N/RESET/QUIT]:  ')) # def yesno is on line 94
+			
 			if any(multi):
+
+				if multi[1] == 'Q':
+					return 'Q' # Quitter
+
 				print('Alright, got that.\n')
 				if multi[1] == 'R':
 					continue
+
 				break # pass on to P1First call loop. multi input should be correct.
 			else:
 				continue
 
+
 		while True:
-			P1First = yesno( inp = input('P1, wanna go first? [Y/N/RESET]:  '))
+			P1First = yesno( inp = input('P1, wanna go first? [Y/N/RESET/QUIT]:  '))
+
 			if any(P1First):
+
+				if P1First[1] == 'Q':
+					print('\nquitting...\n')
+					return
+
 				print('Alright, got that.\n')
 				break # Both inputs are correct (or reset), loop breaks.
 			else:
@@ -84,10 +99,18 @@ def initialize():
 			continue
 		break
 
+	# initialized board here to reset it every time the game restarts
+	Board = {
+		1:P2 , 2:P2 , 3:P2 ,
+		4:" ", 5:" ", 6:" ",
+		7:P1 , 8:P1 , 9:P1 ,
+	}
+
 
 	return {
+		'Board': Board,
 		'Multiplayer':multi[1],
-		'P1First':P1First[1],
+		'P1First':P1First[1]
 		}
 
 
@@ -98,13 +121,16 @@ def yesno(inp):
 	
 	Returns a tuple that has two items. 
 		First item is True if user input was correct, False (along with the second item) otherwise.
-		Second item is true if the player answers Yes, False if No
+		Second item is true if the player answers Yes, False if No, 'R' if Return
 	
 	'''
 
-	global Y, N # Gets the Y and N sets from globals
+	global Y, N, Q, R # Gets the Y and N sets from globals
 
-	if inp == 'reset' or inp == 'r' or inp == 'RESET' or inp == 'R': # reset signal
+	if inp in Q:
+		return True,'Q'
+
+	elif inp in R: # reset signal
 		return True,'R'
 
 	elif inp in Y.union(N): # if the answer is valid
@@ -183,7 +209,12 @@ def playermoved(Board,currentPMark,otherPMark):
 		otherPMark (str): The other player's mark. also used as the one above
 		
 	returns the movement origin of the player for using it to check if all the player's pieces moved or not
+
+	THIS FUNCTION CONTAINS INPUT PROMPTS
 	'''
+
+	global Q
+
 	# list of possible corner movement combinations
 	corners = [
 		{1,9},
@@ -213,9 +244,6 @@ def playermoved(Board,currentPMark,otherPMark):
 		{6,7}
 	]
 
-	# return command variations set
-	Return = {'Return','return','RETURN','r','R'}
-
 	# I used to try a mathematical approach instead of a possible combinations approach, but it was never consistent across all possible movements. For example: moving from square 4 to square 3 should mathematically mean a 1-block movement, but it actually is an out-of-range movement.
 
 	# This loop is for RESET fallbacks
@@ -226,7 +254,13 @@ def playermoved(Board,currentPMark,otherPMark):
 
 			try:
 
-				moveOrigin = int(input('Type in a slot number where you have one of your pieces:  '))
+				moveOrigin = input('Type in a slot number where you have one of your pieces [or Q=QUIT]:  ')
+
+				if moveOrigin in Q:
+					print('\nquitting...\n')
+					return
+				
+				moveOrigin = int(moveOrigin)
 
 				if moveOrigin not in Board:
 
@@ -255,9 +289,13 @@ def playermoved(Board,currentPMark,otherPMark):
 
 			try:
 
-				moveDest = input('Choose a slot number where you want it to go [or R = RETURN]:  ')
+				moveDest = input('Choose a slot number where you want it to go [or R=RETURN / Q=QUIT]:  ')
+
+				if moveDest in Q:
+					print('\nquitting...\n')
+					return
 				
-				if moveDest in Return:
+				elif moveDest in R:
 					break # get out of this loop, continue the mother loop
 					
 				moveDest = int(moveDest)
@@ -305,7 +343,7 @@ def playermoved(Board,currentPMark,otherPMark):
 					print('your input was invalid')
 					continue
 		
-		if moveDest in Return:
+		if moveDest in R:
 			continue
 		break
 
@@ -316,38 +354,19 @@ def playermoved(Board,currentPMark,otherPMark):
 
 
 def compumoved(Board,currentPMark,otherPMark,allmoved):
-	
-	### AI ALGORITHM ###
-	# all must move first
-		# make a set of all the possible move dests and origins combinations as lists and pass them through all the forbidden movements as sets, popping/deleting any match
-		# make another list of all the move origins that are still False [list(dict.keys(False))?] (from runGame) [another param needed]
-		# you end up with a set of all the possible movement lists [origin,dist] and another of unmoved origins
-		# copy the possibilities set for a fallback into random choice in case all moved
-		# loop through the movement lists set with index[0] aka origin and see if it's in unmoved origins
-		# again if yes pass if no pop/delete that list
-		# no choice available:
-			# check for winning moves
-		# one choice or more:
-			# randomChoice it
-		
-	# check for winning moves
-		# get the filtered set of lists from above
-		# loop every set item (as set) on winning moves and see if the len of your intersection is 2
-			# if yes difference the intersection with the win move to find the required dist
-				# if [origin,dist] in possible dists, keep it, else pass
-		# no choice available:
-			# fallback to regular random choice
-		# one choice or more:
-			# randomChoice it vs filtered for 67/33 chance to win/pass
 
 	'''
 	Processes the computer's movement and checks its validity specifically based on the Siga rules.
-	This function is derived from playermoved() but with automated choosing system.
+	This function is derived from playermoved() but with automated CONTEXT AWARE choosing system.
 
 	Params:
 		Board (dict)
 		currentPMark (str): Current turn computer's mark. used for conditions and comparisons
 		otherPMark (str): The player's mark. also used as the one above
+		allmoved (dict): A dictionary with the specific structure of:
+			{1:boolean, 2:boolean, 3:boolean}
+			since the computer pieces initially occupy squares 1, 2, and 3, and when they leave the square,
+			their boolean value turns True. 
 		
 	returns the movement origin of the player for using it to check if all the player's pieces moved or not
 	'''
@@ -359,6 +378,7 @@ def compumoved(Board,currentPMark,otherPMark,allmoved):
 	# get a list of all the possible piece choices (3 choices only) and all the possible destination choices (3 choices only) proior to choosing
 	# to reduce the number of random choices that could go wrong ( from 9 choices on board twice to three choices twice), and for condition checking
 
+	# This loop fills up the variables moveOrigins and moveDests
 	for square in Board:
 		if Board[square] == ' ': # If the square is empty
 			moveDests.append(square) # Make it a possible destination
@@ -368,6 +388,7 @@ def compumoved(Board,currentPMark,otherPMark,allmoved):
 			pass
 
 
+	# Those are explained in playermoved()
 	corners = [
 		{1,9},
 		{3,7}
@@ -394,6 +415,7 @@ def compumoved(Board,currentPMark,otherPMark,allmoved):
 		{6,7}
 	]
 
+	# all the possible win combinations:
 	win = [
 		{1,2,3},
 		{4,5,6},
@@ -405,10 +427,42 @@ def compumoved(Board,currentPMark,otherPMark,allmoved):
 		{3,5,7}
 	]
 
-	AIlist = []
+	### AI ALGORITHM ###
+		# all must move first:
+			# computer checks if all the pieces have moved and checks all the possible move paths
+
+				# make a set of all the possible move dests and origins combinations as lists and pass them through all the forbidden movements as sets, popping/deleting any match
+				# make another list of all the move origins that are still False [list(dict.keys(False))?] (from runGame) [another param needed]
+				# you end up with a set of all the possible movement lists [origin,dist] and another of unmoved origins
+				# copy the possibilities set for a fallback into random choice in case all moved
+				# loop through the movement lists set with index[0] aka origin and see if it's in unmoved origins
+				# again if yes pass if no pop/delete that list
+				# no choice available:
+					# check for winning moves
+				# one choice or more:
+					# randomChoice it
+				
+		# check for winning moves
+			# computer checks if a move could make it win and does it
+
+				# get the filtered set of lists from above
+				# loop every set item (as set) on winning moves and see if the len of your intersection is 2
+					# if yes difference the intersection with the win move to find the required dist
+						# if [origin,dist] in possible dists, keep it, else pass
+				# no choice available:
+					# fallback to regular random choice
+				# one choice or more:
+					# either take the win (67% chance) or pass (33% chance) to emulate human error and reduce hardness
+
+	# Step 1: find all the possible paths that don't interfere with the game rules
+
+	AIlist = [] # list of all the possible correct movements
+	# loop fills AIlist
 	for origin in moveOrigins:
+
 		for destination in moveDests:
 
+			# stored conditions that represent the game's movement rules
 			cornerJumps = {origin,destination} in corners
 			normalJumps = {origin,destination} in jumps
 			ambitious = {origin,destination} in ambition
@@ -419,62 +473,86 @@ def compumoved(Board,currentPMark,otherPMark,allmoved):
 			elif (normalJumps or cornerJumps) and Board[(origin+destination)/2] == otherPMark:
 				continue
 
-			else:
+			else: # move is correct
 				AIlist.append([origin,destination])
+	
+	del(origin,destination) # cleanup
 
 
-	if all(allmoved.values()):
+	# Step 2: check if all computer pieces moved, and filter down to the paths that involve unmoved pieces
+	# if all pieces are moved, all the posibilities from Step 1 become valid.
 
-		options = AIlist
+	if all(allmoved.values()): # if all the computer pieces have moved
+		options = AIlist # computer's options become the entire list of possible movements
 
 
-	else:
-
-		unmovedset = set()
-		for origin in allmoved:
-			if allmoved[origin] == False:
-				unmovedset.add(origin)
+	else: # a piece or more hasn't moved yet
 
 		options = []
-		for option in AIlist:
-			if option[0] in unmovedset:
-				options.append(option)
+		# computer's options are all the possible paths that would let an unmoved piece move 
+		# This loop goes in all the possible movement paths on AIlist
+		for path in AIlist:
+			if \
+			path[0] in allmoved and \
+			allmoved[path[0]]==False: # if the path's origin square is in allmoved and its value is False
+
+				options.append(path)
+		
+		del(path) # cleanup
 
 
-	winoptions = []
+	# Step 3: assess the paths in which a win is possible, filter down to those
 
+	winoptions = [] # all the possible movement paths that WILL ensure a win
+	# Loop goes through every single winning possibility, example: {1,5,9} is a win.
 	for winset in win:
 
-		if len(set(moveOrigins).intersection(winset)) == 2:
+		if len(set(moveOrigins).intersection(winset)) == 2: # This means that if TWO of my pieces are in a win set go on
+
+			winsquare = winset.difference(set(moveOrigins)).pop() # The final piece's ideal position to get a win
+			# is the difference between the win set and the current pieces' set
 
 			for option in options:
-				if option[1] == winset.difference(set(moveOrigins)).pop() and option[0] not in winset:
+				if option[1] == winsquare and option[0] not in winset: # if the path has an origin that isn't 
+				# in the win set and a destination that is the final piece to achieve a win:
+
 					winoptions.append(option)
 
 
+	# Step 4: Make the move
 
-	movechoice = randomChoice([1,2,3])
-	winmoving = bool((movechoice%3 != 0) and winoptions)
-	notTrapped = bool(options)
+	winmoving = bool(winoptions) # Returns True if there was at least one winning move
+	# movechoice = randomChoice([1,2,3])
+	# winmoving = bool((movechoice%3 != 0) and winoptions) # Uncomment those two lines for easy mode
+	notTrapped = bool(options) # Returns True if there is at least one movement option
 
-	if winmoving:
-		winmove = randomChoice(winoptions)
-		[moveOrigin,moveDest] = winmove
-		Board[moveOrigin] = ' '
-		Board[moveDest] = currentPMark
-	elif notTrapped:
-		move = randomChoice(options)
+	if winmoving: # if there is a chance to win
+
+		move = randomChoice(winoptions)
 		[moveOrigin,moveDest] = move
+
 		Board[moveOrigin] = ' '
 		Board[moveDest] = currentPMark
-	else:
-		move = randomChoice(AIlist)
-		[moveOrigin,moveDest] = move
-		Board[moveOrigin] = ' '
-		Board[moveDest] = currentPMark
+	
+	else: # no chance to win
+
+		if notTrapped: # This condition is probably the most used throughout the game
+
+			move = randomChoice(options)
+			[moveOrigin,moveDest] = move
+
+			Board[moveOrigin] = ' '
+			Board[moveDest] = currentPMark
+		
+		else: # There's only one case I'm aware of that this code will execute: That is if there was an unmoved piece that was also trapped from all directions
+			move = randomChoice(AIlist) # Using AIlist here instead of options because options in this case would be an empty list []
+			[moveOrigin,moveDest] = move
+
+			Board[moveOrigin] = ' '
+			Board[moveDest] = currentPMark
 
 
-	return moveOrigin
+	return moveOrigin # This return is explained in playermoved()
 
 
 def wincheck(Board,player,allmoved=False):
@@ -518,7 +596,13 @@ def runGame():
 	help()
 
 	info = initialize() # info is a dict
-	global Board, P1, P2, comp, Y, N
+
+	if info == 'Q':
+		print('\nquitting...\n')
+		return
+	
+	Board = info['Board']
+	global P1, P2, comp, Y, N
 
 	while True:		
 
@@ -538,7 +622,12 @@ def runGame():
 
 					print('P1\'s Turn:')
 					showBoard(Board)
-					P1moved[playermoved(Board,P1,P2)] = True # playermoved returns the move origin which is used here to say that the original piece's place has been abandoned at least once, even if it's filled again.
+					move = playermoved(Board,P1,P2)
+
+					if move == None: # Player quitted
+						return
+
+					P1moved[move] = True # playermoved returns the move origin which is used here to say that the original piece's place has been abandoned at least once, even if it's filled again.
 
 					if wincheck(Board,P1,all(P1moved.values())): # all(P1moved.values()) means that all the pieces have at least moved once, if so the value would be True.
 						showBoard(Board)
@@ -547,7 +636,12 @@ def runGame():
 					
 					print('P2\'s Turn:')
 					showBoard(Board)
-					P2moved[playermoved(Board,P2,P1)] = True
+					move = playermoved(Board,P2,P1)
+					
+					if move == None: # Player quitted
+						return
+
+					P1moved[move] = True
 
 					if wincheck(Board,P2,all(P2moved.values())):
 						showBoard(Board)
@@ -563,7 +657,12 @@ def runGame():
 
 					print('P2\'s Turn:')
 					showBoard(Board)
-					P2moved[playermoved(Board,P2,P1)] = True
+					move = playermoved(Board,P2,P1)
+					
+					if move == None: # Player quitted
+						return
+
+					P1moved[move] = True
 
 					if wincheck(Board,P2,all(P2moved.values())):
 						showBoard(Board)
@@ -572,7 +671,12 @@ def runGame():
 					
 					print('P1\'s Turn:')
 					showBoard(Board)
-					P1moved[playermoved(Board,P1,P2)] = True
+					move = playermoved(Board,P1,P2)
+					
+					if move == None: # Player quitted
+						return
+
+					P1moved[move] = True
 
 					if wincheck(Board,P1,all(P1moved.values())):
 						showBoard(Board)
@@ -593,7 +697,12 @@ def runGame():
 				while True:
 					
 					showBoard(Board)
-					P1moved[playermoved(Board,P1,comp)] = True
+					move = playermoved(Board,P1,P2)
+					
+					if move == None: # Player quitted
+						return
+
+					P1moved[move] = True
 					
 					if wincheck(Board,P1,all(P1moved.values())):
 						showBoard(Board)
@@ -620,11 +729,15 @@ def runGame():
 						break
 					
 					showBoard(Board)
-					P1moved[playermoved(Board,P1,comp)] = True
+					move = playermoved(Board,P1,P2)
+					
+					if move == None: # Player quitted
+						return
+
+					P1moved[move] = True
 					
 					if wincheck(Board,P1,all(P1moved.values())):
 						showBoard(Board)
 						print('P1 Won!')
 						break
 				break
-

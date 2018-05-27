@@ -17,10 +17,10 @@ print('One of the games is the famous tic tac toe (By Adham 1710056), \nthe seco
 
 print('We hope you enjoy your time playing!\n\n\n')
 
-# Options to choose from later on, static variables
-Y = {'Y', 'y', 'yes', 'Yes', 'YES','yES'}
-N = {'N', 'n', 'no', 'No', 'NO', 'nO'}
-Q = {'Q', 'q', 'quit', 'Quit', 'QUIT', 'qUIT'}
+# Options to choose from later on, static set variables
+Y = Siga.Y
+N = Siga.N
+Q = Siga.Q
 Valid = True # Checker for the validity of answer, makes sure the loop continues on invalid answer
 
 # The Program Runner loop, only useful when answer is undecided. Falls back to the first input.
