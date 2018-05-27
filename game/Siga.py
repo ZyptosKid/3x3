@@ -63,7 +63,7 @@ def initialize():
 	while True:
 	
 		while True:
-			multi = yesno( inp = input('Multiplayer? [Y/N/RESET]:  ')) # def multiplayer is on line 94
+			multi = yesno( inp = input('Multiplayer? [Y/N/RESET]:  ')) # def yesno is on line 94
 			if any(multi) or multi == 'RESET':
 				print('Alright, got that.\n')
 				break # pass on to whoFirst call loop. multiplayer input should be correct.
@@ -208,7 +208,7 @@ def playermoved(Board,currentPMark,otherPMark):
 		{6,7}
 	]
 
-	# I used to try a mathematical approach instead off possible combinations approach but it was never consistent across all possible movements. For example: moving from square 4 to square 3 should mathematically mean a 1-block movement, but it actually is an out-of-range movement.
+	# I used to try a mathematical approach instead of a possible combinations approach, but it was never consistent across all possible movements. For example: moving from square 4 to square 3 should mathematically mean a 1-block movement, but it actually is an out-of-range movement.
 
 	# This loop is for RESET fallbacks
 	while True:
@@ -412,7 +412,7 @@ def wincheck(Board,player,allmoved=False):
 
 	if allmoved: # If all the player-in-question's pieces moved, check if he won. Because you have to move all your pieces in Siga before a line of pieces is considered a win.
 
-		if PlayerComb in win: # if P is a winning combination
+		if PlayerComb in win: # if PlayerComb is a winning combination
 			return True
 
 	else:
