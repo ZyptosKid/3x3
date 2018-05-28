@@ -1,0 +1,131 @@
+console outtput:
+
+Alright! Another round!
+
+Which game do you want to play?
+Choose a number from the following list:
+
+                [1] Tic Tac Toe
+                [2] Siga
+                [3] Rocket Collider
+                [*] Any other choice = leave to main
+
+
+- I want to play:  3
+hello, losers! This is GM Mahmoud Wessam_1710472. And i'm here to teach you how to live...umm,play XD
+Listen carefully!
+This is Rocket Collider. 3X3 grid game where you can go anywhere anytime, the goal is to be the last man standing,
+meaning, DONNT Collide
+Goodluck!
+see ya on the other side! XD
+
+
+[1] | [2] | [3]
+----------------
+[4] | [5] | [6]
+----------------
+[7] | [8] | [9]
+
+P1 Pick a start point (only digits, please): 6
+
+P2 Pick a start point (only digits, please): 5
+
+P3 Pick a start point (only digits, please): 9
+
+[1] | [2] | [3]
+----------------
+[4] | P2  | P1
+----------------
+[7] | [8] | P3
+
+!Movement System!
+you are practically allowed to move anyhow and go anywhere,
+as long as you donnt collide,
+goodluck surviving the rocket mash
+
+P1 Pick a slot to move to
+(don't worry, it won't show on screen):
+
+
+!Move from your place P1,
+and Pick another cell:
+
+P2 Pick a slot to move to
+(don't worry, it won't show on screen):
+
+
+
+P3 Pick a slot to move to
+(don't worry, it won't show on screen):
+
+
+
+P3  | [2] | [3]
+----------------
+[4] | [5] | [6]
+----------------
+P1  | [8] | [9]
+
+P1 Pick a slot to move to
+(don't worry, it won't show on screen):
+
+
+
+P2 Pick a slot to move to
+(don't worry, it won't show on screen):
+
+
+
+P3 Pick a slot to move to
+(don't worry, it won't show on screen):
+
+
+
+P2  | P3  | [3]
+----------------
+[4] | [5] | [6]
+----------------
+[7] | [8] | [9]
+
+
+P1 Pick a slot to move to
+(don't worry, it won't show on screen):
+
+
+
+P2 Pick a slot to move to
+(don't worry, it won't show on screen):
+
+
+
+P3 Pick a slot to move to
+(don't worry, it won't show on screen):
+
+
+
+P1  | [2] | P3
+----------------
+[4] | [5] | P2
+----------------
+[7] | [8] | [9]
+
+P1 Pick a slot to move to
+(don't worry, it won't show on screen):
+
+!Cell invalid!
+P1 Pick an valid cell to move to:
+
+
+P2 Pick a slot to move to
+(don't worry, it won't show on screen): Traceback (most recent call last):
+  File "/run/media/hazem/OS/Users/Hazem Elmasry/Documents/MEGA/NU/NU-S18/CS/Project/3x3/game/MainFrame.py", line 66, in <module>
+    Rc.runGame()
+  File "/run/media/hazem/OS/Users/Hazem Elmasry/Documents/MEGA/NU/NU-S18/CS/Project/3x3/game/RocketCollider.py", line 56, in runGame
+    Next_move()
+  File "/run/media/hazem/OS/Users/Hazem Elmasry/Documents/MEGA/NU/NU-S18/CS/Project/3x3/game/RocketCollider.py", line 110, in Next_move
+    'P{:d} Pick a slot to move to \n(don\'t worry, it won\'t show on screen): '.format(i))
+  File "/usr/lib/python3.6/getpass.py", line 77, in unix_getpass
+    passwd = _raw_input(prompt, stream, input=input)
+  File "/usr/lib/python3.6/getpass.py", line 146, in _raw_input
+    line = input.readline()
+KeyboardInterrupt
